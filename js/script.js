@@ -8,15 +8,16 @@ const previewTag = document.getElementById("previewTag");
 let currentReportType = "citation"; // "citation" or "arrest"
 
 // Format a single 3-column row for STOP BASIS (PC/RS)
+// Total width: col1(22) + col2(22) + col3(remainder) — fits in 59-char preview
 function formatStopBasisRow(item1, checked1, item2, checked2, item3, checked3, otherText = "") {
     const c1 = checked1 ? "[x]" : "[ ]";
     const c2 = checked2 ? "[x]" : "[ ]";
     const c3 = checked3 ? "[x]" : "[ ]";
 
-    const col1 = `${c1} ${item1}`.padEnd(29, " ");
-    const col2 = `${c2} ${item2}`.padEnd(27, " ");
-    const col3 = item3 === "Other:" 
-        ? `${c3} Other:${otherText ? " " + otherText : ""}` 
+    const col1 = `${c1} ${item1}`.padEnd(22, " ");
+    const col2 = `${c2} ${item2}`.padEnd(22, " ");
+    const col3 = item3 === "Other:"
+        ? `${c3} Other:${otherText ? " " + otherText : ""}`
         : `${c3} ${item3}`;
 
     return `${col1}${col2}${col3}`;
@@ -48,16 +49,16 @@ function generateCadCitationText() {
     const vehPlate = getVal("veh_plate");
     const vehState = getVal("veh_state") || (document.getElementById("veh_state") ? "" : "SA");
 
-    // 4. Stop Basis (PC/RS)
+    // 4. Stop Basis (PC/RS) — labels kept ≤17 chars so 3 cols fit in 59-char preview
     const otherText = getVal("basis_other_text");
 
-    const basisRow1 = formatStopBasisRow("Speed", isChecked("basis_speed"), "Stop Sign", isChecked("basis_stopsign"), "Failure to Yield", isChecked("basis_yield"));
-    const basisRow2 = formatStopBasisRow("Improper Signal", isChecked("basis_signal"), "Lane Use/Unsafe Change", isChecked("basis_lane"), "Following Too Close", isChecked("basis_following"));
-    const basisRow3 = formatStopBasisRow("Right of Way", isChecked("basis_rightofway"), "Cell Phone/Texting", isChecked("basis_cellphone"), "Seatbelt", isChecked("basis_seatbelt"));
-    const basisRow4 = formatStopBasisRow("Equipment (lights, etc.)", isChecked("basis_equipment"), "Window Tint", isChecked("basis_tint"), "Loud Exhaust/Noise", isChecked("basis_exhaust"));
-    const basisRow5 = formatStopBasisRow("Expired Reg/No Plates", isChecked("basis_expiredreg"), "No Insurance", isChecked("basis_insurance"), "Exhibition of Speed", isChecked("basis_exhibition"));
-    const basisRow6 = formatStopBasisRow("School Zone", isChecked("basis_schoolzone"), "Work Zone", isChecked("basis_workzone"), "Failure to Yield (emergency)", isChecked("basis_emergency_yield"));
-    const basisRow7 = formatStopBasisRow("DUI/Impairment", isChecked("basis_dui"), "Documentation", isChecked("basis_documentation"), "Other:", isChecked("basis_other") || Boolean(otherText), otherText);
+    const basisRow1 = formatStopBasisRow("Speed",              isChecked("basis_speed"),          "Stop Sign",        isChecked("basis_stopsign"),      "Fail to Yield",      isChecked("basis_yield"));
+    const basisRow2 = formatStopBasisRow("Improper Signal",    isChecked("basis_signal"),          "Lane/Unsafe Chg",  isChecked("basis_lane"),          "Following Close",    isChecked("basis_following"));
+    const basisRow3 = formatStopBasisRow("Right of Way",       isChecked("basis_rightofway"),      "Cell/Texting",     isChecked("basis_cellphone"),     "Seatbelt",           isChecked("basis_seatbelt"));
+    const basisRow4 = formatStopBasisRow("Equipment (lights)", isChecked("basis_equipment"),       "Window Tint",      isChecked("basis_tint"),          "Loud Exhaust/Noise", isChecked("basis_exhaust"));
+    const basisRow5 = formatStopBasisRow("Expired Reg/Plates", isChecked("basis_expiredreg"),      "No Insurance",     isChecked("basis_insurance"),     "Exhibition Speed",   isChecked("basis_exhibition"));
+    const basisRow6 = formatStopBasisRow("School Zone",        isChecked("basis_schoolzone"),      "Work Zone",        isChecked("basis_workzone"),      "Yield (Emergency)",  isChecked("basis_emergency_yield"));
+    const basisRow7 = formatStopBasisRow("DUI/Impairment",     isChecked("basis_dui"),             "Documentation",    isChecked("basis_documentation"), "Other:",             isChecked("basis_other") || Boolean(otherText), otherText);
 
     // 5. Speed (if applicable)
     const speedPosted = getVal("speed_posted");
@@ -129,7 +130,7 @@ function generateCadCitationText() {
     const notesVal = getVal("notes");
 
     return [
-        "SAN ANDREAS STATE POLICE — TRAFFIC CITATION",
+        "SAN ANDREAS STATE POLICE — TRAFFIC REPORT",
         "",
         dateLine,
         timeLine,
@@ -218,7 +219,7 @@ function generateCadArrestText() {
     const warrantType = getVal("arr_warrant_type");
     const warrantCourt = getVal("arr_warrant_court");
     const warrantStr = `Warrant (Type/No.:${warrantType ? " " + warrantType : ""} Court:${warrantCourt ? " " + warrantCourt : ""} )`;
-    
+
     const basisPC = isChecked("arr_basis_pc") ? "[x]" : "[ ]";
     const basisPursuit = isChecked("arr_basis_pursuit") ? "[x]" : "[ ]";
     const basisParole = isChecked("arr_basis_parole") ? "[x]" : "[ ]";
@@ -463,9 +464,9 @@ function switchReportType(type) {
         if (tabArrest) tabArrest.classList.remove("active");
         if (citationForm) citationForm.style.display = "flex";
         if (arrestForm) arrestForm.style.display = "none";
-        if (titleEl) titleEl.textContent = "Traffic Citation Generator";
-        if (descEl) descEl.textContent = "SAN ANDREAS STATE POLICE — TRAFFIC CITATION";
-        if (previewTag) previewTag.textContent = "TRAFFIC CITATION";
+        if (titleEl) titleEl.textContent = "Traffic Report Generator";
+        if (descEl) descEl.textContent = "SAN ANDREAS STATE POLICE — TRAFFIC REPORT";
+        if (previewTag) previewTag.textContent = "TRAFFIC REPORT";
     }
 
     syncOfficerInputs();
@@ -547,9 +548,9 @@ function setCurrentDateTime() {
 
     // Use local time — respects the user's OS/browser timezone automatically
     const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day   = String(now.getDate()).padStart(2, "0");
-    const year  = now.getFullYear();
-    const hours   = String(now.getHours()).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
 
     // Detect the short timezone abbreviation (e.g. BST, EST, PST, CEST)
@@ -865,7 +866,7 @@ function loadExampleData() {
         setCheck("enf_citation", true);
         setCheck("tow_no", true);
         setVal("notes", "Subject was cooperative during traffic stop. Cited and released without incident.");
-        showToast("Loaded sample traffic citation", "success");
+        showToast("Loaded sample traffic report", "success");
     }
 
     updatePreview();
@@ -1064,3 +1065,33 @@ window.addEventListener("beforeunload", (e) => {
         e.returnValue = ""; // Triggers the browser's built-in "Leave site?" dialog
     }
 });
+
+// ── Theme Toggle ──────────────────────────────────────────────────────────────
+(function initTheme() {
+    const root = document.documentElement;
+    const btn  = document.getElementById("themeToggle");
+    const label = btn?.querySelector(".theme-toggle-label");
+
+    // Apply saved preference immediately (before first paint)
+    const saved = localStorage.getItem("sasp-theme");
+    if (saved === "light") root.setAttribute("data-theme", "light");
+
+    function updateLabel() {
+        const isLight = root.getAttribute("data-theme") === "light";
+        if (label) label.textContent = isLight ? "Light" : "Dark";
+    }
+
+    updateLabel();
+
+    btn?.addEventListener("click", () => {
+        const isLight = root.getAttribute("data-theme") === "light";
+        if (isLight) {
+            root.removeAttribute("data-theme");
+            localStorage.setItem("sasp-theme", "dark");
+        } else {
+            root.setAttribute("data-theme", "light");
+            localStorage.setItem("sasp-theme", "light");
+        }
+        updateLabel();
+    });
+})();
