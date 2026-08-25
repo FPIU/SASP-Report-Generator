@@ -34,7 +34,7 @@ function generateCadCitationText() {
     const streetVal = getVal("street");
 
     const dateLine = `Date: \t${dateVal}`;
-    const timeLine = `Time: ${timeVal ? timeVal + " " : " "}Hrs GMT+1`;
+    const timeLine = `Time: ${timeVal ? timeVal : " "}`;
     const locLine = `Location/Postal: ${postalVal}`;
     const streetLine = `Street/Road: ${streetVal}`;
 
@@ -196,7 +196,7 @@ function generateCadArrestText() {
     const streetVal = getVal("arr_street");
 
     const dateLine = `Date: ${dateVal}`;
-    const timeLine = `Time: ${timeVal ? timeVal + " " : " "}Hrs GMT`;
+    const timeLine = `Time: ${timeVal ? timeVal : " "}`;
     const locLine = `Location/Postal: ${postalVal}`;
     const streetLine = `Road/Street: ${streetVal}`;
 
@@ -541,32 +541,39 @@ function downloadReport() {
     showToast(`Saved ${filename}`, "success");
 }
 
-// Autofill Date and Time (GMT+1 for Citation, GMT for Arrest)
+// Autofill Date and Time using the browser's local timezone
 function setCurrentDateTime() {
     const now = new Date();
 
+    // Use local time — respects the user's OS/browser timezone automatically
     const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const year = now.getFullYear();
+    const day   = String(now.getDate()).padStart(2, "0");
+    const year  = now.getFullYear();
+    const hours   = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
 
-    const utcHours = now.getUTCHours();
-    const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+    // Detect the short timezone abbreviation (e.g. BST, EST, PST, CEST)
+    let tzAbbr = "";
+    try {
+        tzAbbr = new Intl.DateTimeFormat("en", { timeZoneName: "short" })
+            .formatToParts(now)
+            .find(p => p.type === "timeZoneName")?.value || "";
+    } catch (e) { /* Intl not supported — leave blank */ }
+
+    const localTime = `${hours}:${minutes} Hrs${tzAbbr ? " " + tzAbbr : ""}`;
 
     if (currentReportType === "arrest") {
-        const formattedGmtTime = `${String(utcHours).padStart(2, "0")}:${minutes}`;
         const arrDateField = document.getElementById("arr_date");
         const arrTimeField = document.getElementById("arr_time");
         if (arrDateField) arrDateField.value = `${month}/${day}/${year}`;
-        if (arrTimeField) arrTimeField.value = formattedGmtTime;
-        showToast("Date & GMT Time filled", "success");
+        if (arrTimeField) arrTimeField.value = localTime;
+        showToast(`Date & time filled (${tzAbbr || "local"})`, "success");
     } else {
-        const gmt1Hours = (utcHours + 1) % 24;
-        const formattedGmt1Time = `${String(gmt1Hours).padStart(2, "0")}:${minutes}`;
         const dateField = document.getElementById("date");
         const timeField = document.getElementById("time");
         if (dateField) dateField.value = `${month}/${day}/${year}`;
-        if (timeField) timeField.value = formattedGmt1Time;
-        showToast("Date & GMT+1 Time filled", "success");
+        if (timeField) timeField.value = localTime;
+        showToast(`Date & time filled (${tzAbbr || "local"})`, "success");
     }
 
     updatePreview();
@@ -766,23 +773,23 @@ function loadExampleData() {
         setVal("arr_primary_pc", "Suspect fled from marked SASP vehicle and was found in possession of illegal firearms.");
 
         const c1Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(1)");
-        setVal("arr_c1_title", "P.C. [4D.02] - FLEEING OR ATTEMPTING TO ELUDE A PEACE OFFICER");
+        setVal("arr_c1_title", "FLEEING OR ATTEMPTING TO ELUDE A PEACE OFFICER");
         if (c1Row) {
-            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("4D.02"));
+            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.description.includes("FLEEING"));
             applyViolationClassification(c1Row, match1);
         }
 
         const c2Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(2)");
-        setVal("arr_c2_title", "P.C. [6F.01.2] - POSSESSION OF ILLEGAL FIREARMS");
+        setVal("arr_c2_title", "POSSESSION OF ILLEGAL FIREARMS");
         if (c2Row) {
-            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("6F.01.2"));
+            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.description.includes("ILLEGAL FIREARMS"));
             applyViolationClassification(c2Row, match2);
         }
 
         const c3Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(3)");
-        setVal("arr_c3_title", "P.C. [4D.03] - RESISTING ARREST");
+        setVal("arr_c3_title", "RESISTING ARREST");
         if (c3Row) {
-            const match3 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("4D.03"));
+            const match3 = (typeof violations !== "undefined" ? violations : []).find(v => v.description.includes("RESISTING"));
             applyViolationClassification(c3Row, match3);
         }
 
@@ -842,16 +849,16 @@ function loadExampleData() {
         setCheck("dir_north", true);
 
         const v1Row = document.querySelector("#citationViolationsList .violation-entry-row:nth-child(1)");
-        setVal("v1_title", "P.C. [5E.01.5] - SPEEDING (21 MPH +)");
+        setVal("v1_title", "SPEEDING (21 MPH +)");
         if (v1Row) {
-            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("5E.01.5"));
+            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.description.includes("SPEEDING (21"));
             applyViolationClassification(v1Row, match1);
         }
 
         const v2Row = document.querySelector("#citationViolationsList .violation-entry-row:nth-child(2)");
-        setVal("v2_title", "P.C. [5E.04] - FAILURE TO MAINTAIN LANES");
+        setVal("v2_title", "FAILURE TO MAINTAIN LANES");
         if (v2Row) {
-            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("5E.04"));
+            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.description.includes("MAINTAIN LANES"));
             applyViolationClassification(v2Row, match2);
         }
 
@@ -1015,4 +1022,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial render
     updatePreview();
+});
+
+// ── Unsaved-data guard ────────────────────────────────────────────────────────
+/**
+ * Returns true if any meaningful field is filled in on either form section.
+ * Intentionally excludes the officer credential inputs (callsign, rank, name)
+ * since those are typically pre-set and don't represent active report work.
+ */
+function isFormFilled() {
+    // Officer credential IDs to skip (default populated, not "report data")
+    const skipIds = new Set([
+        "officer_callsign", "officer_rank", "officer_name",
+        "arr_officer_callsign", "arr_officer_rank", "arr_officer_name"
+    ]);
+
+    // Check all text inputs and textareas
+    const inputs = document.querySelectorAll("input[type='text'], input[type='number'], textarea");
+    for (const el of inputs) {
+        if (skipIds.has(el.id)) continue;
+        if (el.value && el.value.trim().length > 0) return true;
+    }
+
+    // Check checkboxes that are NOT checked by default in the HTML
+    // We compare against a known list of always-default-checked IDs
+    const defaultChecked = new Set([
+        "arr_custodial_yes", "arr_miranda_yes", "arr_interp_no"
+    ]);
+    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+    for (const cb of checkboxes) {
+        if (defaultChecked.has(cb.id)) continue;
+        if (cb.checked) return true;
+    }
+
+    return false;
+}
+
+window.addEventListener("beforeunload", (e) => {
+    if (isFormFilled()) {
+        e.preventDefault();
+        e.returnValue = ""; // Triggers the browser's built-in "Leave site?" dialog
+    }
 });

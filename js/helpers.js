@@ -291,7 +291,7 @@ function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget
                 if (typeSelect.value === "Felony") {
                     const textVal = input.value.trim();
                     const match = (typeof violations !== "undefined" ? violations : []).find(v => 
-                        textVal && `${v.code} - ${v.description}`.toLowerCase() === textVal.toLowerCase()
+                        textVal && v.description.toLowerCase() === textVal.toLowerCase()
                     );
                     showIaFelonyWarning(match || { code: "FELONY", description: textVal || "Custom Charge", felony: true }, rowElement);
                 }
@@ -314,8 +314,6 @@ function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget
 
         // Check if current text is an exact match for any violation
         const exactMatch = (typeof violations !== "undefined" ? violations : []).find(v => 
-            `${v.code} - ${v.description}`.toLowerCase() === query.toLowerCase() ||
-            v.code.toLowerCase() === query.toLowerCase() ||
             v.description.toLowerCase() === query.toLowerCase()
         );
 
@@ -331,10 +329,6 @@ function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget
         matches.forEach(item => {
             const row = document.createElement("div");
             row.className = "violation-option";
-
-            const codeSpan = document.createElement("span");
-            codeSpan.className = "violation-code-badge";
-            codeSpan.textContent = item.code;
 
             const descSpan = document.createElement("span");
             descSpan.className = "violation-desc-text";
@@ -352,14 +346,12 @@ function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget
             classSpan.className = `violation-class-badge ${badgeClass}`;
             classSpan.textContent = item.classification || (item.felony ? "FELONY" : item.misdemeanor ? "MISDEMEANOR" : "INFRACTION");
 
-            row.appendChild(codeSpan);
             row.appendChild(descSpan);
             row.appendChild(classSpan);
 
             row.addEventListener("mousedown", (e) => {
                 e.preventDefault(); // Prevent input blur before click registers
-                input.value = `${item.code} - ${item.description}`;
-                input.dataset.code = item.code;
+                input.value = item.description;
                 input.dataset.description = item.description;
                 input.dataset.classification = item.classification || "";
 
