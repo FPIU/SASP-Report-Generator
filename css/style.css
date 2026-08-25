@@ -123,11 +123,77 @@
     color: #334155;
 }
 
-[data-theme="light"] .pill-btn:has(input:checked) {
-    background: rgba(37,99,235,0.12);
-    border-color: #2563eb;
-    color: #1d4ed8;
+[data-theme="light"] .pill-btn:hover {
+    background: #e2eaf4;
+    border-color: #b0c0d4;
+    color: #0f172a;
 }
+
+[data-theme="light"] .pill-btn:has(input:checked) {
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #ffffff;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.25);
+}
+
+[data-theme="light"] .pill-btn:has(input:disabled:checked),
+[data-theme="light"] .pill-btn.pill-locked:has(input:checked) {
+    background: #2563eb;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+[data-theme="light"] .pill-btn:has(input:disabled:not(:checked)),
+[data-theme="light"] .pill-btn.pill-locked:not(:has(input:checked)) {
+    background: #e8eef5;
+    border-color: #c9d6e3;
+    color: #94a3b8;
+}
+
+/* Stop Basis grid — was hardcoded dark */
+[data-theme="light"] .stop-basis-grid {
+    background: #eef2f7;
+    border-color: var(--border-color);
+}
+
+[data-theme="light"] .basis-chip {
+    background: #ffffff;
+    border-color: #c9d6e3;
+}
+
+[data-theme="light"] .basis-chip:hover {
+    background: #e2eaf4;
+    border-color: #b0c0d4;
+}
+
+[data-theme="light"] .basis-chip:has(input:checked) {
+    background: rgba(37,99,235,0.1);
+    border-color: #2563eb;
+}
+
+[data-theme="light"] .basis-box {
+    background: #f4f7fb;
+    border-color: #94a3b8;
+}
+
+[data-theme="light"] .basis-text { color: #334155; }
+[data-theme="light"] .basis-chip:has(input:checked) .basis-text { color: #1d4ed8; }
+
+/* Section header divider — rgba white was invisible in light */
+[data-theme="light"] .section-badge-header {
+    border-bottom-color: #c9d6e3;
+}
+
+[data-theme="light"] .section-num {
+    background: #2563eb;
+    color: #fff;
+    border-color: #1d4ed8;
+}
+
+[data-theme="light"] .section-title { color: #0f172a; }
+[data-theme="light"] .field-label { color: #334155; }
+[data-theme="light"] .field-hint { color: var(--text-muted); }
+
 
 [data-theme="light"] .violation-entry-row {
     background: var(--bg-input);

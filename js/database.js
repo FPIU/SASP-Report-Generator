@@ -841,6 +841,14 @@ const defaultViolations = [
         "felony": true,
         "misdemeanor": false,
         "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "IMPEDING TRAFFIC",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
     }
 ];
 

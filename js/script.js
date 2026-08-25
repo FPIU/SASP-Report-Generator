@@ -335,7 +335,8 @@ function generateCadArrestText() {
     const bGuardian = isChecked("arr_booked_guardian") ? "[x]" : "[ ]";
     const bookedLine = `Booked: ${bYes} Yes ${bCite} Cite & Release ${bDetox} Detox/Med Clear then Book ${bGuardian} Released to Guardian`;
 
-    const propLogged = getVal("arr_property_logged");
+    const propLoggedYes = isChecked("arr_property_logged_yes") ? "[x]" : "[ ]";
+    const propLoggedNo  = isChecked("arr_property_logged_no")  ? "[x]" : "[ ]";
     const photosYes = isChecked("arr_photos_yes") ? "[x]" : "[ ]";
     const photosNo = isChecked("arr_photos_no") ? "[x]" : "[ ]";
 
@@ -413,7 +414,7 @@ function generateCadArrestText() {
         `Transported By (Unit): ${transportUnit}`,
         `Facility: ${facility}`,
         bookedLine,
-        `Property Logged Under: ${propLogged} `,
+        `Property Logged: ${propLoggedYes} Yes ${propLoggedNo} No`,
         `Photos: ${photosYes} Yes ${photosNo} No`,
         caseRefLine,
         "",
@@ -815,7 +816,7 @@ function loadExampleData() {
         setVal("arr_transport_unit", "Deputy Chief D. Littin | S-05");
         setVal("arr_facility", "Grapeseed State Police Station");
         setCheck("arr_booked_yes", true);
-        setVal("arr_property_logged", "Locker #104");
+        setCheck("arr_property_logged_yes", true);
         setCheck("arr_photos_yes", true);
         setCheck("arr_ref_da", true);
 
