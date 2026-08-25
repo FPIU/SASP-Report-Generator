@@ -133,6 +133,11 @@ function applyViolationClassification(rowElement, item) {
     const pillLabels = rowElement.querySelectorAll(".pill-btn");
 
     if (fel && misd && inf) {
+        // Helper to clear locked color classes
+        const clearPillColors = (l) => {
+            l.classList.remove("pill-locked", "pill-locked-felony", "pill-locked-misdemeanor", "pill-locked-infraction");
+        };
+
         if (item) {
             const isFel = Boolean(item.felony);
             const isMisd = Boolean(item.misdemeanor);
@@ -148,7 +153,14 @@ function applyViolationClassification(rowElement, item) {
                 misd.disabled = true;
                 inf.disabled = true;
 
-                pillLabels.forEach(l => l.classList.add("pill-locked"));
+                pillLabels.forEach(l => {
+                    clearPillColors(l);
+                    l.classList.add("pill-locked");
+                    const inputInside = l.querySelector("input");
+                    if (inputInside && inputInside.checked) {
+                        l.classList.add("pill-locked-felony");
+                    }
+                });
             } else if (isMisd && !isFel && !isInf) {
                 fel.checked = false;
                 misd.checked = true;
@@ -158,7 +170,14 @@ function applyViolationClassification(rowElement, item) {
                 misd.disabled = true;
                 inf.disabled = true;
 
-                pillLabels.forEach(l => l.classList.add("pill-locked"));
+                pillLabels.forEach(l => {
+                    clearPillColors(l);
+                    l.classList.add("pill-locked");
+                    const inputInside = l.querySelector("input");
+                    if (inputInside && inputInside.checked) {
+                        l.classList.add("pill-locked-misdemeanor");
+                    }
+                });
             } else if (isInf && !isFel && !isMisd) {
                 fel.checked = false;
                 misd.checked = false;
@@ -168,16 +187,23 @@ function applyViolationClassification(rowElement, item) {
                 misd.disabled = true;
                 inf.disabled = true;
 
-                pillLabels.forEach(l => l.classList.add("pill-locked"));
+                pillLabels.forEach(l => {
+                    clearPillColors(l);
+                    l.classList.add("pill-locked");
+                    const inputInside = l.querySelector("input");
+                    if (inputInside && inputInside.checked) {
+                        l.classList.add("pill-locked-infraction");
+                    }
+                });
             } else if (isFel && isMisd) {
-                // Wobbler charge (can be charged as Misdemeanor or Felony): keep buttons enabled so officer can choose
+                // Wobbler charge: keep enabled
                 fel.disabled = false;
                 misd.disabled = false;
                 inf.disabled = false;
-                pillLabels.forEach(l => l.classList.remove("pill-locked"));
+                pillLabels.forEach(clearPillColors);
 
                 if (!fel.checked && !misd.checked) {
-                    misd.checked = true; // Default to Misdemeanor, selectable to Felony
+                    misd.checked = true; // Default to Misd
                 }
                 inf.checked = false;
             } else {
@@ -185,14 +211,14 @@ function applyViolationClassification(rowElement, item) {
                 fel.disabled = false;
                 misd.disabled = false;
                 inf.disabled = false;
-                pillLabels.forEach(l => l.classList.remove("pill-locked"));
+                pillLabels.forEach(clearPillColors);
             }
         } else {
             // No item (custom text or cleared): unlock all buttons
             fel.disabled = false;
             misd.disabled = false;
             inf.disabled = false;
-            pillLabels.forEach(l => l.classList.remove("pill-locked"));
+            pillLabels.forEach(clearPillColors);
 
             const textInput = rowElement.querySelector(".violation-search-input");
             if (!textInput || !textInput.value.trim()) {
@@ -208,22 +234,47 @@ function applyViolationClassification(rowElement, item) {
     const isCitationRow = Boolean(rowElement.closest("#citationViolationsList") || typeSelect);
 
     if (typeSelect && isCitationRow) {
+        // Helper to clear locked color classes on select
+        const clearSelectColors = () => {
+            typeSelect.classList.remove("select-locked", "select-locked-felony", "select-locked-misdemeanor", "select-locked-infraction");
+        };
+
         if (item) {
             if (item.felony && !item.misdemeanor) {
+                // Definite felony
                 typeSelect.value = "Felony";
+                typeSelect.disabled = true;
+                clearSelectColors();
+                typeSelect.classList.add("select-locked", "select-locked-felony");
                 showIaFelonyWarning(item, rowElement);
             } else if (item.misdemeanor && !item.felony) {
+                // Definite misdemeanor
                 typeSelect.value = "Misd";
-            } else if (item.infraction) {
+                typeSelect.disabled = true;
+                clearSelectColors();
+                typeSelect.classList.add("select-locked", "select-locked-misdemeanor");
+            } else if (item.infraction && !item.felony && !item.misdemeanor) {
+                // Definite infraction
                 typeSelect.value = "Inf";
+                typeSelect.disabled = true;
+                clearSelectColors();
+                typeSelect.classList.add("select-locked", "select-locked-infraction");
             } else if (item.felony && item.misdemeanor) {
+                // Wobbler — default to Misd but let officer choose
                 typeSelect.value = "Misd";
+                typeSelect.disabled = false;
+                clearSelectColors();
+            } else {
+                typeSelect.disabled = false;
+                clearSelectColors();
             }
         } else {
             const textInput = rowElement.querySelector(".violation-search-input");
             if (!textInput || !textInput.value.trim()) {
                 typeSelect.value = "";
             }
+            typeSelect.disabled = false;
+            clearSelectColors();
         }
     }
 }

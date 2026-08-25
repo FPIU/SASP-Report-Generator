@@ -983,6 +983,96 @@ body {
     flex-shrink: 0;
 }
 
+/* Red contour for easier spotting of Violations / Offenses sections */
+.section-card-violations {
+    border: 1px solid rgba(239, 68, 68, 0.45) !important;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
+}
+.section-card-violations:hover {
+    border-color: rgba(239, 68, 68, 0.75) !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+}
+
+/* Locked select — classification auto-detected and preset */
+.select-locked {
+    opacity: 0.85;
+    cursor: not-allowed;
+    font-style: italic;
+    pointer-events: none;
+}
+
+/* Type-specific locked colors for select dropdowns (Citation) */
+.select-locked-felony {
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #fca5a5 !important;
+}
+.select-locked-misdemeanor {
+    border-color: rgba(217, 119, 6, 0.6) !important;
+    background-color: rgba(217, 119, 6, 0.15) !important;
+    color: #fde047 !important;
+}
+.select-locked-infraction {
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    background-color: rgba(16, 185, 129, 0.12) !important;
+    color: #6ee7b7 !important;
+}
+
+/* Light mode overrides for locked selects */
+[data-theme="light"] .select-locked-felony {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.08) !important;
+    color: #b91c1c !important;
+}
+[data-theme="light"] .select-locked-misdemeanor {
+    border-color: #d97706 !important;
+    background-color: rgba(217, 119, 6, 0.08) !important;
+    color: #b45309 !important;
+}
+[data-theme="light"] .select-locked-infraction {
+    border-color: #10b981 !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    color: #047857 !important;
+}
+
+/* Type-specific locked colors for pill buttons (Arrest) */
+.pill-btn.pill-locked-felony {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    color: #fca5a5 !important;
+    opacity: 0.95 !important;
+}
+.pill-btn.pill-locked-misdemeanor {
+    background: rgba(217, 119, 6, 0.2) !important;
+    border-color: rgba(217, 119, 6, 0.6) !important;
+    color: #fde047 !important;
+    opacity: 0.95 !important;
+}
+.pill-btn.pill-locked-infraction {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    color: #6ee7b7 !important;
+    opacity: 0.95 !important;
+}
+
+/* Light mode overrides for locked pills */
+[data-theme="light"] .pill-btn.pill-locked-felony {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-color: #ef4444 !important;
+    color: #b91c1c !important;
+}
+[data-theme="light"] .pill-btn.pill-locked-misdemeanor {
+    background: rgba(217, 119, 6, 0.08) !important;
+    border-color: #d97706 !important;
+    color: #b45309 !important;
+}
+[data-theme="light"] .pill-btn.pill-locked-infraction {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: #10b981 !important;
+    color: #047857 !important;
+}
+
+
 .clear-violation-btn,
 .clear-arr-charge-btn {
     padding: 4px 8px;
