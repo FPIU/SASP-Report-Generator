@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASP CAD Report Generator | San Andreas State Police</title>
+    <meta name="description"
+        content="San Andreas State Police CAD Report Generator & MDT Tool. Standardized Traffic Citation & Arrest Reports.">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="brand-section">
+                <div class="badge-logo" title="San Andreas State Police">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="50,6 63,33 94,36 71,59 78,90 50,75 22,90 29,59 6,36 37,33" fill="#1e3a8a"
+                            stroke="#d97706" stroke-width="3" />
+                        <circle cx="50" cy="51" r="21" fill="#0f172a" stroke="#d97706" stroke-width="1.8" />
+                        <text x="50" y="48"
+                            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                            font-size="11" font-weight="900" fill="#f8fafc" text-anchor="middle"
+                            letter-spacing="1">SASP</text>
+                        <text x="50" y="60"
+                            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                            font-size="6.5" font-weight="700" fill="#d97706" text-anchor="middle"
+                            letter-spacing="0.5">STATE POLICE</text>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>San Andreas State Police</h1>
+                    <p class="brand-subtitle">CAD Report Generator • MDT System</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <span class="status-indicator">
+                    <span class="status-dot"></span>
+                    MDT ACTIVE • SASP CAD
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-wrapper">
+        <div class="cad-layout-grid">
+
+            <!-- Left Side: Form Generator Card -->
+            <section class="card-panel form-panel">
+                <div class="panel-header">
+                    <div class="panel-title-group">
+                        <h2 id="activeReportTitle" class="panel-title">Traffic Citation Generator</h2>
+                        <p id="activeReportDesc" class="panel-desc">SAN ANDREAS STATE POLICE — TRAFFIC CITATION</p>
+                    </div>
+
+                    <!-- Hidden Select for Script Compatibility -->
+                    <select id="reportType" style="display:none;">
+                        <option value="citation">Traffic Citation</option>
+                        <option value="arrest">Arrest Report</option>
+                    </select>
+                </div>
+
+                <div class="panel-body">
+                    <!-- Report Switcher Tabs -->
+                    <div class="report-tabs-bar">
+                        <button type="button" class="report-tab active" data-report="citation" id="tabCitation">
+                            Traffic Citation
+                        </button>
+                        <button type="button" class="report-tab" data-report="arrest" id="tabArrest">
+                            Arrest Report
+                        </button>
+                    </div>
+
+                    <!-- Action Toolbar -->
+                    <div class="toolbar-actions">
+                        <button type="button" id="filldatetime" class="btn btn-primary btn-sm">
+                            <svg class="btn-icon" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            Autofill Date / Time
+                        </button>
+                        <button type="button" id="loadSampleBtn" class="btn btn-secondary btn-sm">
+                            Load Example
+                        </button>
+                        <button type="button" id="clearBtn" class="btn btn-outline btn-sm">
+                            Clear Form
+                        </button>
+                        <button type="button" id="downloadBtn" class="btn btn-secondary btn-sm"
+                            style="margin-left: auto;">
+                            Export .txt
+                        </button>
+                    </div>
+
+                    <!-- =========================================
+                         1. TRAFFIC CITATION FORM
+                         ========================================= -->
+                    <div id="citationForm" class="citation-form-container report-form-view">
+
+                        <!-- 01. Incident Details -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">01</span>
+                                <h3 class="section-title">Incident Details &amp; Location</h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="date">Date</label>
+                                    <input type="text" id="date" class="form-input" placeholder="e.g. 08/25/2026">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="time">Time <span class="field-hint">(Hrs GMT+1)</span></label>
+                                    <input type="text" id="time" class="form-input" placeholder="e.g. 14:30">
+                                </div>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="postal">Location / Postal</label>
+                                    <input type="text" id="postal" class="form-input"
+                                        placeholder="e.g. Postal 1024 / Sandy Shores">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="street">Street / Road</label>
+                                    <input type="text" id="street" class="form-input"
+                                        placeholder="e.g. Joshua Road / Senora Fwy">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 02. Reporting Officer Section (Above Driver Info) -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">02</span>
+                                <div>
+                                    <h3 class="section-title">Reporting Officer</h3>
+                                    <p class="section-subtitle">Values entered here automatically populate the REPORTING
+                                        OFFICER &amp; Signature block at the bottom of the CAD report.</p>
+                                </div>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1.2fr 1.2fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="officer_callsign">Callsign</label>
+                                    <input type="text" id="officer_callsign" class="form-input"
+                                        placeholder="S-05">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="officer_rank">Rank</label>
+                                    <input type="text" id="officer_rank" class="form-input"
+                                        placeholder="Deputy Chief">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="officer_name">Name</label>
+                                    <input type="text" id="officer_name" class="form-input"
+                                        placeholder="D. Littin">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 03. Driver Information -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">03</span>
+                                <h3 class="section-title">Driver Information</h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1.2fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="driver_name">Name</label>
+                                    <input type="text" id="driver_name" class="form-input"
+                                        placeholder="e.g. Berry Doofus">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="driver_id">Identifier</label>
+                                    <input type="text" id="driver_id" class="form-input"
+                                        placeholder="e.g. DL-992014 / CID-8812">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 04. Vehicle Information -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">04</span>
+                                <h3 class="section-title">Vehicle Information</h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1.4fr 1fr 1fr 0.8fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="veh_make">Make / Type</label>
+                                    <input type="text" id="veh_make" class="form-input"
+                                        placeholder="e.g. Dodge Charger">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="veh_color">Color</label>
+                                    <input type="text" id="veh_color" class="form-input"
+                                        placeholder="Black">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="veh_plate">Plate</label>
+                                    <input type="text" id="veh_plate" class="form-input uppercase-input"
+                                        placeholder="e.g. 48XYZ123">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="veh_state">State</label>
+                                    <input type="text" id="veh_state" class="form-input uppercase-input"
+                                        placeholder="SA">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 05. Stop Basis (PC/RS) -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">05</span>
+                                <div>
+                                    <h3 class="section-title">Stop Basis (PC/RS)</h3>
+                                    <p class="section-subtitle">Select all probable causes or reasonable suspicions that apply</p>
+                                </div>
+                            </div>
+
+                            <div class="stop-basis-grid">
+                                <!-- Column 1 -->
+                                <div class="stop-basis-col">
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_speed">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Speed</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_signal">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Improper Signal</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_rightofway">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Right of Way</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_equipment">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Equipment (lights, etc.)</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_expiredreg">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Expired Reg/No Plates</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_schoolzone">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">School Zone</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_dui">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">DUI/Impairment</span>
+                                    </label>
+                                </div>
+
+                                <!-- Column 2 -->
+                                <div class="stop-basis-col">
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_stopsign">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Stop Sign</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_lane">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Lane Use/Unsafe Change</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_cellphone">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Cell Phone/Texting</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_tint">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Window Tint</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_insurance">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">No Insurance</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_workzone">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Work Zone</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_documentation">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Documentation</span>
+                                    </label>
+                                </div>
+
+                                <!-- Column 3 -->
+                                <div class="stop-basis-col">
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_yield">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Failure to Yield</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_following">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Following Too Close</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_seatbelt">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Seatbelt</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_exhaust">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Loud Exhaust/Noise</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_exhibition">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Exhibition of Speed</span>
+                                    </label>
+                                    <label class="basis-chip">
+                                        <input type="checkbox" id="basis_emergency_yield">
+                                        <span class="basis-box"></span>
+                                        <span class="basis-text">Failure to Yield (emergency)</span>
+                                    </label>
+                                    <div class="basis-other-wrapper">
+                                        <label class="basis-chip basis-other-chip">
+                                            <input type="checkbox" id="basis_other">
+                                            <span class="basis-box"></span>
+                                            <span class="basis-text">Other:</span>
+                                        </label>
+                                        <input type="text" id="basis_other_text" class="form-input form-input-sm"
+                                            placeholder="Specify other PC/RS...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 06. Speed & Direction -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">06</span>
+                                <h3 class="section-title">Speed &amp; Direction of Travel</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr 1.2fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="speed_posted">Posted Speed (MPH)</label>
+                                    <input type="text" id="speed_posted" class="form-input" placeholder="e.g. 65">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="speed_alleged">Alleged Speed (MPH)</label>
+                                    <input type="text" id="speed_alleged" class="form-input" placeholder="e.g. 88">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="calibration_date">Calibration Date</label>
+                                    <input type="text" id="calibration_date" class="form-input" placeholder="e.g. 08/01/2026">
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Speed Enforcement Method</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="speed_radar">
+                                            <span>RADAR</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="speed_lidar">
+                                            <span>LIDAR</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="speed_pace">
+                                            <span>Pace</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="speed_visual">
+                                            <span>Visual Est.</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="field-wrapper">
+                                    <label class="field-label">Direction of Travel</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="dir_north">
+                                            <span>North</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="dir_south">
+                                            <span>South</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="dir_east">
+                                            <span>East</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="dir_west">
+                                            <span>West</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 07. Violations -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">07</span>
+                                <div>
+                                    <h3 class="section-title">Violation(s)</h3>
+                                    <p class="section-subtitle">Search or type Penal/Vehicle code titles and select classification</p>
+                                </div>
+                            </div>
+
+                            <div class="violations-list-container">
+                                <!-- Violation Row 1 -->
+                                <div class="violation-entry-row" data-index="1">
+                                    <div class="violation-row-num">#1</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="v1_title" class="form-input violation-search-input"
+                                            placeholder="Type code or search violation (e.g. 22349(a) VC - Speeding)..."
+                                            autocomplete="off">
+                                        <div id="v1_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="violation-type-box">
+                                        <select id="v1_type" class="form-select">
+                                            <option value="">-- MISD / INF / FEL --</option>
+                                            <option value="Inf">Infraction (Inf)</option>
+                                            <option value="Misd">Misdemeanor (Misd)</option>
+                                            <option value="Felony">Felony</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-violation-btn"
+                                        data-target="1" title="Clear violation">✕</button>
+                                </div>
+
+                                <!-- Violation Row 2 -->
+                                <div class="violation-entry-row" data-index="2">
+                                    <div class="violation-row-num">#2</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="v2_title" class="form-input violation-search-input"
+                                            placeholder="Violation 2 (optional)..." autocomplete="off">
+                                        <div id="v2_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="violation-type-box">
+                                        <select id="v2_type" class="form-select">
+                                            <option value="">-- MISD / INF / FEL --</option>
+                                            <option value="Inf">Infraction (Inf)</option>
+                                            <option value="Misd">Misdemeanor (Misd)</option>
+                                            <option value="Felony">Felony</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-violation-btn"
+                                        data-target="2" title="Clear violation">✕</button>
+                                </div>
+
+                                <!-- Violation Row 3 -->
+                                <div class="violation-entry-row" data-index="3">
+                                    <div class="violation-row-num">#3</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="v3_title" class="form-input violation-search-input"
+                                            placeholder="Violation 3 (optional)..." autocomplete="off">
+                                        <div id="v3_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="violation-type-box">
+                                        <select id="v3_type" class="form-select">
+                                            <option value="">-- MISD / INF / FEL --</option>
+                                            <option value="Inf">Infraction (Inf)</option>
+                                            <option value="Misd">Misdemeanor (Misd)</option>
+                                            <option value="Felony">Felony</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-violation-btn"
+                                        data-target="3" title="Clear violation">✕</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 08. Enforcement & Impound -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">08</span>
+                                <h3 class="section-title">Enforcement &amp; Disposition</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1.5fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Enforcement Action</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="enf_citation">
+                                            <span>Citation</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="enf_written">
+                                            <span>Written Warning</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="enf_verbal">
+                                            <span>Verbal Warning</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="enf_fixit">
+                                            <span>Fix-It</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="fixit_due">Fix-It Due Date <span
+                                            class="field-hint">(if applicable)</span></label>
+                                    <input type="text" id="fixit_due" class="form-input"
+                                        placeholder="e.g. 15 Days / 09/10/2026">
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1.5fr; margin-top: 6px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Tow / Impound</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="tow_yes">
+                                            <span>Yes</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="tow_no">
+                                            <span>No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="released_to">Released To</label>
+                                    <input type="text" id="released_to" class="form-input"
+                                        placeholder="e.g. Driver / SADOT / State Impound">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 09. Defendant & Notes -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">09</span>
+                                <h3 class="section-title">Defendant &amp; Stop Notes</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1.2fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="defendant_sig">Signature (or Refused)</label>
+                                    <input type="text" id="defendant_sig" class="form-input"
+                                        placeholder="E-Signature / Refused">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label">Copy Issued</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="copy_issued_yes">
+                                            <span>[x] Yes</span>
+                                        </label>
+                                        <label class="pill-btn">
+                                            <input type="checkbox" id="copy_issued_no">
+                                            <span>[ ] No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-top: 10px;">
+                                <label class="field-label" for="notes">Notes / Observations</label>
+                                <textarea id="notes" class="form-textarea"
+                                    placeholder="Enter any relevant observations, defendant statements, or warning notes..."></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         2. ARREST REPORT FORM
+                         ========================================= -->
+                    <div id="arrestForm" class="arrest-form-container report-form-view" style="display: none;">
+
+                        <!-- A01. Incident & Location -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">01</span>
+                                <h3 class="section-title">Incident Details &amp; Location</h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_date">Date</label>
+                                    <input type="text" id="arr_date" class="form-input" placeholder="e.g. 08/25/2026">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_time">Time <span class="field-hint">(Hrs GMT)</span></label>
+                                    <input type="text" id="arr_time" class="form-input" placeholder="e.g. 14:30">
+                                </div>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_postal">Location / Postal</label>
+                                    <input type="text" id="arr_postal" class="form-input"
+                                        placeholder="e.g. Postal 2044 / Grapeseed">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_street">Road / Street</label>
+                                    <input type="text" id="arr_street" class="form-input"
+                                        placeholder="e.g. Main St / Seaview Rd">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A02. Reporting Officer Section (Above Subject Info) -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">02</span>
+                                <div>
+                                    <h3 class="section-title">Reporting Officer</h3>
+                                    <p class="section-subtitle">Values entered here automatically populate the OFFICER INFORMATION, Transported By &amp; Signature blocks at the bottom.</p>
+                                </div>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1fr 1.2fr 1.2fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_officer_callsign">Callsign</label>
+                                    <input type="text" id="arr_officer_callsign" class="form-input"
+                                        placeholder="S-05">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_officer_rank">Rank</label>
+                                    <input type="text" id="arr_officer_rank" class="form-input"
+                                        placeholder="Deputy Chief">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_officer_name">Name</label>
+                                    <input type="text" id="arr_officer_name" class="form-input"
+                                        placeholder="D. Littin">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A03. Subject Information -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">03</span>
+                                <h3 class="section-title">Subject Information</h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1.2fr 1fr 0.6fr 0.8fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_subject_name">Name</label>
+                                    <input type="text" id="arr_subject_name" class="form-input" placeholder="e.g. Johnathan Doe">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_subject_id">Identifier</label>
+                                    <input type="text" id="arr_subject_id" class="form-input" placeholder="e.g. DL-992014 / CID-8812">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_subject_sex">Sex</label>
+                                    <input type="text" id="arr_subject_sex" class="form-input" placeholder="e.g. M / F">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_subject_race">Race</label>
+                                    <input type="text" id="arr_subject_race" class="form-input" placeholder="e.g. Caucasian">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A04. Associated Vehicle -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">04</span>
+                                <h3 class="section-title">Associated Vehicle <span class="field-hint">(if applicable)</span></h3>
+                            </div>
+                            <div class="form-row" style="grid-template-columns: 1.2fr 1fr 1fr 1.2fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_veh_make">Make / Type</label>
+                                    <input type="text" id="arr_veh_make" class="form-input" placeholder="e.g. Vapid Stanier">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_veh_color">Color</label>
+                                    <input type="text" id="arr_veh_color" class="form-input" placeholder="e.g. Black">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_veh_plate">Plate</label>
+                                    <input type="text" id="arr_veh_plate" class="form-input uppercase-input" placeholder="e.g. 88ABC123">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_veh_owner">Registered Owner <span class="field-hint">(if different)</span></label>
+                                    <input type="text" id="arr_veh_owner" class="form-input" placeholder="Blank if subject">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A05. Arrest Basis (PC/RS) -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">05</span>
+                                <h3 class="section-title">Arrest Basis (PC/RS)</h3>
+                            </div>
+
+                            <div class="pill-group" style="margin-bottom: 10px;">
+                                <label class="pill-btn">
+                                    <input type="checkbox" id="arr_basis_onview">
+                                    <span>On-View Offense</span>
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="checkbox" id="arr_basis_warrant">
+                                    <span>Warrant</span>
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="checkbox" id="arr_basis_pc">
+                                    <span>Probable Cause</span>
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="checkbox" id="arr_basis_pursuit">
+                                    <span>Fresh Pursuit</span>
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="checkbox" id="arr_basis_parole">
+                                    <span>Parole/Probation Clause</span>
+                                </label>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 10px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_warrant_type">Warrant Type / Number <span class="field-hint">(if applicable)</span></label>
+                                    <input type="text" id="arr_warrant_type" class="form-input" placeholder="e.g. Felony Bench #9914">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_warrant_court">Warrant Court</label>
+                                    <input type="text" id="arr_warrant_court" class="form-input" placeholder="e.g. Los Santos Superior Court">
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper">
+                                <label class="field-label" for="arr_primary_pc">Primary PC (Reason)</label>
+                                <input type="text" id="arr_primary_pc" class="form-input" placeholder="e.g. Observed suspect actively brandishing firearm during robbery...">
+                            </div>
+                        </div>
+
+                        <!-- A06. Offenses / Charges -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">06</span>
+                                <div>
+                                    <h3 class="section-title">Offenses / Charges</h3>
+                                    <p class="section-subtitle">Search or type Penal/Vehicle codes and select classification</p>
+                                </div>
+                            </div>
+
+                            <div class="violations-list-container">
+                                <!-- Charge 1 -->
+                                <div class="violation-entry-row">
+                                    <div class="violation-row-num">#1</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="arr_c1_title" class="form-input violation-search-input" placeholder="Type or search charge (e.g. 211 PC - Robbery)..." autocomplete="off">
+                                        <div id="arr_c1_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="pill-group" style="flex-shrink:0;">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c1_fel"><span>Fel</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c1_misd"><span>Misd</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c1_inf"><span>Inf</span></label>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-arr-charge-btn" data-target="1" title="Clear">✕</button>
+                                </div>
+
+                                <!-- Charge 2 -->
+                                <div class="violation-entry-row">
+                                    <div class="violation-row-num">#2</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="arr_c2_title" class="form-input violation-search-input" placeholder="Charge 2 (optional)..." autocomplete="off">
+                                        <div id="arr_c2_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="pill-group" style="flex-shrink:0;">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c2_fel"><span>Fel</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c2_misd"><span>Misd</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c2_inf"><span>Inf</span></label>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-arr-charge-btn" data-target="2" title="Clear">✕</button>
+                                </div>
+
+                                <!-- Charge 3 -->
+                                <div class="violation-entry-row">
+                                    <div class="violation-row-num">#3</div>
+                                    <div class="violation-search-box">
+                                        <input type="text" id="arr_c3_title" class="form-input violation-search-input" placeholder="Charge 3 (optional)..." autocomplete="off">
+                                        <div id="arr_c3_results" class="violation-results"></div>
+                                    </div>
+                                    <div class="pill-group" style="flex-shrink:0;">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c3_fel"><span>Fel</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c3_misd"><span>Misd</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_c3_inf"><span>Inf</span></label>
+                                    </div>
+                                    <button type="button" class="btn btn-outline btn-sm clear-arr-charge-btn" data-target="3" title="Clear">✕</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A07. Miranda & Interviews -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">07</span>
+                                <h3 class="section-title">Miranda / Interviews</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Custodial?</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_custodial_yes" checked><span>Yes</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_custodial_no"><span>No</span></label>
+                                    </div>
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label">Miranda Given:</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_miranda_yes" checked><span>Yes</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_miranda_no"><span>No</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_miranda_explain">Miranda Explanation <span class="field-hint">(if No or specific conditions)</span></label>
+                                    <input type="text" id="arr_miranda_explain" class="form-input" placeholder="e.g. Read on scene at 14:32">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label">Statement Given:</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_stmt_none"><span>None</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_stmt_verbal"><span>Verbal</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_stmt_written"><span>Written</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_stmt_recorded"><span>Recorded</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Interpreter Needed?</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_interp_no" checked><span>No</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_interp_yes"><span>Yes</span></label>
+                                    </div>
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_interp_lang">Language <span class="field-hint">(if needed)</span></label>
+                                    <input type="text" id="arr_interp_lang" class="form-input" placeholder="e.g. Spanish">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A08. Search & Seizure -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">08</span>
+                                <h3 class="section-title">Search / Seizure</h3>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-bottom: 10px;">
+                                <label class="field-label">Search Type:</label>
+                                <div class="pill-group">
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_consent"><span>Consent</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_pc"><span>Probable Cause</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_incident"><span>Incident to Arrest</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_patdown"><span>Pat-Down</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_inventory"><span>Inventory</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_warrant"><span>Warrant</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_search_parole"><span>Parole Violation Check</span></label>
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper">
+                                <label class="field-label" for="arr_property_seized">Property Seized (Brief)</label>
+                                <input type="text" id="arr_property_seized" class="form-input" placeholder="N/A">
+                            </div>
+                        </div>
+
+                        <!-- A09. Evidence -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">09</span>
+                                <h3 class="section-title">Evidence</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_ev_bodycam" checked><span>Bodycam</span></label>
+                                        <label class="field-label" for="arr_bodycam_id" style="margin:0;">ID:</label>
+                                    </div>
+                                    <input type="text" id="arr_bodycam_id" class="form-input" placeholder="AXOMMPA3KW9H">
+                                </div>
+                                <div class="field-wrapper">
+                                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_ev_dashcam" checked><span>Dashcam</span></label>
+                                        <label class="field-label" for="arr_dashcam_id" style="margin:0;">ID:</label>
+                                    </div>
+                                    <input type="text" id="arr_dashcam_id" class="form-input" placeholder="345376bnk2-00">
+                                </div>
+                            </div>
+
+                            <div class="pill-group" style="margin: 8px 0;">
+                                <label class="pill-btn"><input type="checkbox" id="arr_ev_photos"><span>Photos</span></label>
+                                <label class="pill-btn"><input type="checkbox" id="arr_ev_video"><span>Video</span></label>
+                                <label class="pill-btn"><input type="checkbox" id="arr_ev_audio"><span>Audio</span></label>
+                                <label class="pill-btn"><input type="checkbox" id="arr_ev_fieldtest"><span>Field Tests</span></label>
+                                <label class="pill-btn"><input type="checkbox" id="arr_ev_other"><span>Other</span></label>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_fieldtest_text">Field Tests (Type / Result)</label>
+                                    <input type="text" id="arr_fieldtest_text" class="form-input" placeholder="e.g. NIK Test Presumptive Positive Methamphetamine">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_other_ev_text">Other Evidence Notes</label>
+                                    <input type="text" id="arr_other_ev_text" class="form-input" placeholder="e.g. Physical weapon booked into evidence locker">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A10. Use of Force & Medical -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">10</span>
+                                <h3 class="section-title">Use of Force / Injuries</h3>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-bottom: 8px;">
+                                <label class="field-label">Force Used:</label>
+                                <div class="pill-group">
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_none"><span>None</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_holds"><span>Control Holds</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_takedown"><span>Takedown</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_cew"><span>CEW</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_oc"><span>OC</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_baton"><span>Baton</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_force_lethal"><span>Lethal Cover</span></label>
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-bottom: 8px;">
+                                <label class="field-label">Injuries:</label>
+                                <div class="pill-group">
+                                    <label class="pill-btn"><input type="checkbox" id="arr_inj_none"><span>None</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_inj_subject"><span>Subject</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_inj_officer"><span>Officer</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_inj_third"><span>Third Party</span></label>
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label">Medical Aid:</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_med_declined"><span>Declined</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_med_provided"><span>Provided</span></label>
+                                    </div>
+                                    <input type="text" id="arr_med_by" class="form-input" style="margin-top:4px;" placeholder="Provided by (e.g. SAFD / Paramedic Jones)">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_med_facility">Medical Facility</label>
+                                    <input type="text" id="arr_med_facility" class="form-input" placeholder="e.g. Sandy Shores Medical Center">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- A11. Booking & Disposition -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">11</span>
+                                <h3 class="section-title">Booking / Disposition</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_transport_unit">Transported By (Unit)</label>
+                                    <input type="text" id="arr_transport_unit" class="form-input" placeholder="e.g. Deputy Chief D. Littin | S-05">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_facility">Facility</label>
+                                    <input type="text" id="arr_facility" class="form-input" placeholder="Grapeseed State Police Station">
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper" style="margin: 8px 0;">
+                                <label class="field-label">Booked Action:</label>
+                                <div class="pill-group">
+                                    <label class="pill-btn"><input type="checkbox" id="arr_booked_yes" checked><span>Yes</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_booked_cite"><span>Cite &amp; Release</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_booked_detox"><span>Detox/Med Clear then Book</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_booked_guardian"><span>Released to Guardian</span></label>
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_property_logged">Property Logged Under</label>
+                                    <input type="text" id="arr_property_logged" class="form-input" placeholder="e.g. Lockbox #44 / Evidence #8812">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label">Photos Taken:</label>
+                                    <div class="pill-group">
+                                        <label class="pill-btn"><input type="checkbox" id="arr_photos_yes"><span>Yes</span></label>
+                                        <label class="pill-btn"><input type="checkbox" id="arr_photos_no"><span>No</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-top: 8px;">
+                                <label class="field-label">Case Referred To:</label>
+                                <div class="pill-group">
+                                    <label class="pill-btn"><input type="checkbox" id="arr_ref_da" checked><span>DA</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_ref_city"><span>City Atty</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_ref_probation"><span>Probation</span></label>
+                                    <label class="pill-btn"><input type="checkbox" id="arr_ref_other"><span>Other</span></label>
+                                </div>
+                                <input type="text" id="arr_ref_other_text" class="form-input" style="margin-top:4px;" placeholder="Specify other referral (if applicable)...">
+                            </div>
+                        </div>
+
+                        <!-- A12. Officers & Narrative -->
+                        <div class="form-section-card">
+                            <div class="section-badge-header">
+                                <span class="section-num">12</span>
+                                <h3 class="section-title">Assisting Officers &amp; Narrative</h3>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_assisting">Assisting Officer(s)</label>
+                                    <input type="text" id="arr_assisting" class="form-input" placeholder="e.g. Trooper M. Vance (S-12), SADOT Unit 4">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_supervisor">Supervisor Notified</label>
+                                    <input type="text" id="arr_supervisor" class="form-input" placeholder="e.g. Sgt. Miller">
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_supervisor_time">Supervisor Notified Time</label>
+                                    <input type="text" id="arr_supervisor_time" class="form-input" placeholder="N/A">
+                                </div>
+                                <div class="field-wrapper">
+                                    <label class="field-label" for="arr_completed_at">Report Completed @</label>
+                                    <input type="text" id="arr_completed_at" class="form-input" placeholder="e.g. 15:45">
+                                </div>
+                            </div>
+
+                            <div class="field-wrapper" style="margin-top: 10px;">
+                                <label class="field-label" for="arr_narrative">Narrative</label>
+                                <textarea id="arr_narrative" class="form-textarea" style="min-height: 100px;"
+                                    placeholder="Enter full probable cause narrative, incident sequence, suspect statements, and evidence preservation details..."></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Right Side: Live CAD Monospace Preview Panel -->
+            <aside class="cad-preview-container">
+                <div class="card-panel">
+                    <div class="terminal-header">
+                        <div class="terminal-title-group">
+                            <span class="terminal-badge-title">CAD PREVIEW</span>
+                            <span id="previewTag" class="terminal-tag">TRAFFIC CITATION</span>
+                        </div>
+                        <span id="previewMeta" class="terminal-meta-text">Ready</span>
+                    </div>
+
+                    <div class="terminal-box">
+                        <pre id="preview" spellcheck="false"></pre>
+                    </div>
+
+                    <div class="preview-actions-bar">
+                        <button type="button" id="copyBtn" class="btn btn-primary" style="flex: 1;">
+                            <svg class="btn-icon" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Copy Report to CAD
+                        </button>
+                        <button type="button" id="saveTxtBtn" class="btn btn-secondary">
+                            Save .txt
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="js/helpers.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
