@@ -81,17 +81,20 @@ function generateCadCitationText() {
     const dirWest = isChecked("dir_west") ? "[x]" : "[ ]";
     const dirLine = `North ${dirNorth}   South ${dirSouth}   East ${dirEast}    West ${dirWest}  `;
 
-    // 7. Violations (3 lines)
-    const v1Title = getVal("v1_title");
-    const v1Type = getVal("v1_type");
-    const v2Title = getVal("v2_title");
-    const v2Type = getVal("v2_type");
-    const v3Title = getVal("v3_title");
-    const v3Type = getVal("v3_type");
-
-    const v1Line = `Title: ${v1Title}\t\tMisd/Inf:${v1Type ? " " + v1Type : ""}`;
-    const v2Line = `Title: ${v2Title}\t\tMisd/Inf:${v2Type ? " " + v2Type : ""}`;
-    const v3Line = `Title: ${v3Title}\t\tMisd/Inf:${v3Type ? " " + v3Type : ""}`;
+    // 7. Violations (Dynamic list of rows)
+    const citationRows = document.querySelectorAll("#citationViolationsList .violation-entry-row");
+    const violationLines = [];
+    if (citationRows.length > 0) {
+        citationRows.forEach(row => {
+            const titleInput = row.querySelector(".violation-search-input");
+            const typeSelect = row.querySelector("select");
+            const titleVal = titleInput ? titleInput.value.trim() : "";
+            const typeVal = typeSelect ? typeSelect.value : "";
+            violationLines.push(`Title: ${titleVal}\t\tMisd/Inf:${typeVal ? " " + typeVal : ""}`);
+        });
+    } else {
+        violationLines.push("Title: \t\tMisd/Inf:");
+    }
 
     // 8. Enforcement
     const enfCitation = isChecked("enf_citation") ? "[x]" : "[ ]";
@@ -160,9 +163,7 @@ function generateCadCitationText() {
         dirLine,
         "",
         "VIOLATION(S):",
-        v1Line,
-        v2Line,
-        v3Line,
+        ...violationLines,
         "",
         "ENFORCEMENT:",
         enfLine1,
@@ -227,25 +228,26 @@ function generateCadArrestText() {
     const basisLine2 = `${basisPC} Probable Cause  ${basisPursuit} Fresh Pursuit ${basisParole} Parole/Probation Clause`;
     const basisLine3 = `Primary PC (reason): ${primaryPC}`;
 
-    // 5. Offenses / Charges (3 lines)
-    const c1Title = getVal("arr_c1_title");
-    const c1Fel = isChecked("arr_c1_fel") ? "[x]" : "[ ]";
-    const c1Misd = isChecked("arr_c1_misd") ? "[x]" : "[ ]";
-    const c1Inf = isChecked("arr_c1_inf") ? "[x]" : "[ ]";
+    // 5. Offenses / Charges (Dynamic list of rows)
+    const chargeRows = document.querySelectorAll("#arrestChargesList .violation-entry-row");
+    const chargeLines = [];
+    if (chargeRows.length > 0) {
+        chargeRows.forEach(row => {
+            const titleInput = row.querySelector(".violation-search-input");
+            const felInput = row.querySelector("input[id*='_fel'], input[data-type='fel']");
+            const misdInput = row.querySelector("input[id*='_misd'], input[data-type='misd']");
+            const infInput = row.querySelector("input[id*='_inf'], input[data-type='inf']");
 
-    const c2Title = getVal("arr_c2_title");
-    const c2Fel = isChecked("arr_c2_fel") ? "[x]" : "[ ]";
-    const c2Misd = isChecked("arr_c2_misd") ? "[x]" : "[ ]";
-    const c2Inf = isChecked("arr_c2_inf") ? "[x]" : "[ ]";
+            const titleVal = titleInput ? titleInput.value.trim() : "";
+            const fel = felInput && felInput.checked ? "[x]" : "[ ]";
+            const misd = misdInput && misdInput.checked ? "[x]" : "[ ]";
+            const inf = infInput && infInput.checked ? "[x]" : "[ ]";
 
-    const c3Title = getVal("arr_c3_title");
-    const c3Fel = isChecked("arr_c3_fel") ? "[x]" : "[ ]";
-    const c3Misd = isChecked("arr_c3_misd") ? "[x]" : "[ ]";
-    const c3Inf = isChecked("arr_c3_inf") ? "[x]" : "[ ]";
-
-    const chargeLine1 = `Title: ${c1Title}\t\tCharge(s) Level: ${c1Fel} Fel ${c1Misd} Misd ${c1Inf} Inf`;
-    const chargeLine2 = `Title: ${c2Title}\t\tCharge(s) Level: ${c2Fel} Fel ${c2Misd} Misd ${c2Inf} Inf`;
-    const chargeLine3 = `Title: ${c3Title}\t\tCharge(s) Level: ${c3Fel} Fel ${c3Misd} Misd ${c3Inf} Inf`;
+            chargeLines.push(`Title: ${titleVal}\t\tCharge(s) Level: ${fel} Fel ${misd} Misd ${inf} Inf`);
+        });
+    } else {
+        chargeLines.push("Title: \t\tCharge(s) Level: [ ] Fel [ ] Misd [ ] Inf");
+    }
 
     // 6. Miranda / Interviews
     const custYes = isChecked("arr_custodial_no") ? "[ ]" : "[x]";
@@ -380,9 +382,7 @@ function generateCadArrestText() {
         basisLine3,
         "",
         "OFFENSES / CHARGES:",
-        chargeLine1,
-        chargeLine2,
-        chargeLine3,
+        ...chargeLines,
         "",
         "MIRANDA / INTERVIEWS:",
         `Custodial? ${custYes} Yes ${custNo} No `,
@@ -572,6 +572,121 @@ function setCurrentDateTime() {
     updatePreview();
 }
 
+// Renumber violation or charge rows dynamically
+function renumberViolationRows(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const rows = container.querySelectorAll(".violation-entry-row");
+    rows.forEach((row, idx) => {
+        const numBadge = row.querySelector(".violation-row-num");
+        if (numBadge) numBadge.textContent = `#${idx + 1}`;
+        row.dataset.index = String(idx + 1);
+    });
+}
+
+// Add a new dynamic Citation Violation Row
+function addCitationViolationRow() {
+    const container = document.getElementById("citationViolationsList");
+    if (!container) return;
+    const index = container.querySelectorAll(".violation-entry-row").length + 1;
+
+    const row = document.createElement("div");
+    row.className = "violation-entry-row";
+    row.dataset.index = String(index);
+
+    row.innerHTML = `
+        <div class="violation-row-num">#${index}</div>
+        <div class="violation-search-box">
+            <input type="text" id="v${index}_title" class="form-input violation-search-input"
+                placeholder="Violation ${index} (optional)..." autocomplete="off">
+            <div id="v${index}_results" class="violation-results"></div>
+        </div>
+        <div class="violation-type-box">
+            <select id="v${index}_type" class="form-select">
+                <option value="">-- MISD / INF / FEL --</option>
+                <option value="Inf">Infraction (Inf)</option>
+                <option value="Misd">Misdemeanor (Misd)</option>
+                <option value="Felony">Felony</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm clear-violation-btn"
+            data-target="${index}" title="Clear or remove violation">✕</button>
+    `;
+
+    container.appendChild(row);
+
+    const input = row.querySelector(".violation-search-input");
+    const results = row.querySelector(".violation-results");
+    const typeSelect = row.querySelector("select");
+    const clearBtn = row.querySelector(".clear-violation-btn");
+
+    setupViolationAutocomplete(input, results, typeSelect);
+
+    clearBtn.addEventListener("click", () => {
+        if (container.querySelectorAll(".violation-entry-row").length > 3) {
+            row.remove();
+            renumberViolationRows("citationViolationsList");
+        } else {
+            input.value = "";
+            typeSelect.selectedIndex = 0;
+            applyViolationClassification(row, null);
+        }
+        updatePreview();
+    });
+
+    input.focus();
+    updatePreview();
+}
+
+// Add a new dynamic Arrest Charge Row
+function addArrestChargeRow() {
+    const container = document.getElementById("arrestChargesList");
+    if (!container) return;
+    const index = container.querySelectorAll(".violation-entry-row").length + 1;
+
+    const row = document.createElement("div");
+    row.className = "violation-entry-row";
+    row.dataset.index = String(index);
+
+    row.innerHTML = `
+        <div class="violation-row-num">#${index}</div>
+        <div class="violation-search-box">
+            <input type="text" id="arr_c${index}_title" class="form-input violation-search-input"
+                placeholder="Charge ${index} (optional)..." autocomplete="off">
+            <div id="arr_c${index}_results" class="violation-results"></div>
+        </div>
+        <div class="pill-group" style="flex-shrink:0;">
+            <label class="pill-btn"><input type="checkbox" id="arr_c${index}_fel" data-type="fel"><span>Fel</span></label>
+            <label class="pill-btn"><input type="checkbox" id="arr_c${index}_misd" data-type="misd"><span>Misd</span></label>
+            <label class="pill-btn"><input type="checkbox" id="arr_c${index}_inf" data-type="inf"><span>Inf</span></label>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm clear-arr-charge-btn"
+            data-target="${index}" title="Clear or remove charge">✕</button>
+    `;
+
+    container.appendChild(row);
+
+    const input = row.querySelector(".violation-search-input");
+    const results = row.querySelector(".violation-results");
+    const clearBtn = row.querySelector(".clear-arr-charge-btn");
+
+    setupViolationAutocomplete(input, results, null, index);
+
+    clearBtn.addEventListener("click", () => {
+        if (container.querySelectorAll(".violation-entry-row").length > 3) {
+            row.remove();
+            renumberViolationRows("arrestChargesList");
+        } else {
+            input.value = "";
+            applyViolationClassification(row, null);
+        }
+        updatePreview();
+    });
+
+    input.focus();
+    updatePreview();
+}
+
 // Clear Form Fields (retains officer credentials)
 function clearForm() {
     const activeFormId = currentReportType === "arrest" ? "arrestForm" : "citationForm";
@@ -586,12 +701,38 @@ function clearForm() {
 
         if (el.type === "checkbox") {
             el.checked = false;
+            el.disabled = false;
         } else if (el.tagName === "SELECT") {
             el.selectedIndex = 0;
+            el.disabled = false;
         } else {
             el.value = "";
         }
     });
+
+    // Unlock any locked pill button labels
+    form.querySelectorAll(".pill-btn").forEach(l => l.classList.remove("pill-locked"));
+
+    // Reset extra rows back to default 3
+    if (currentReportType === "arrest") {
+        const container = document.getElementById("arrestChargesList");
+        if (container) {
+            const rows = container.querySelectorAll(".violation-entry-row");
+            rows.forEach((r, idx) => {
+                if (idx >= 3) r.remove();
+            });
+            renumberViolationRows("arrestChargesList");
+        }
+    } else {
+        const container = document.getElementById("citationViolationsList");
+        if (container) {
+            const rows = container.querySelectorAll(".violation-entry-row");
+            rows.forEach((r, idx) => {
+                if (idx >= 3) r.remove();
+            });
+            renumberViolationRows("citationViolationsList");
+        }
+    }
 
     updatePreview();
     showToast("Form cleared", "info");
@@ -622,12 +763,28 @@ function loadExampleData() {
 
         setCheck("arr_basis_onview", true);
         setCheck("arr_basis_pc", true);
-        setVal("arr_primary_pc", "Suspect observed brandishing firearm and resisting arrest.");
+        setVal("arr_primary_pc", "Suspect fled from marked SASP vehicle and was found in possession of illegal firearms.");
 
-        setVal("arr_c1_title", "245(a)(2) PC - Assault with a Firearm");
-        setCheck("arr_c1_fel", true);
-        setVal("arr_c2_title", "148(a)(1) PC - Resisting / Obstructing Peace Officer");
-        setCheck("arr_c2_misd", true);
+        const c1Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(1)");
+        setVal("arr_c1_title", "P.C. [4D.02] - FLEEING OR ATTEMPTING TO ELUDE A PEACE OFFICER");
+        if (c1Row) {
+            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("4D.02"));
+            applyViolationClassification(c1Row, match1);
+        }
+
+        const c2Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(2)");
+        setVal("arr_c2_title", "P.C. [6F.01.2] - POSSESSION OF ILLEGAL FIREARMS");
+        if (c2Row) {
+            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("6F.01.2"));
+            applyViolationClassification(c2Row, match2);
+        }
+
+        const c3Row = document.querySelector("#arrestChargesList .violation-entry-row:nth-child(3)");
+        setVal("arr_c3_title", "P.C. [4D.03] - RESISTING ARREST");
+        if (c3Row) {
+            const match3 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("4D.03"));
+            applyViolationClassification(c3Row, match3);
+        }
 
         setCheck("arr_custodial_yes", true);
         setCheck("arr_miranda_yes", true);
@@ -657,7 +814,7 @@ function loadExampleData() {
         setVal("arr_supervisor", "Sgt. Miller");
         setVal("arr_supervisor_time", "14:40");
         setVal("arr_completed_at", "15:30");
-        setVal("arr_narrative", "On 08/25/2026 at approximately 14:15, SASP units responded to reports of an armed altercation on Main St in Grapeseed. Upon arrival, subject refused commands and brandished a firearm. Non-lethal physical control holds were utilized to safely subdue the suspect. Subject was read Miranda at 14:22 and transported to Grapeseed Station for booking without further incident.");
+        setVal("arr_narrative", "On 08/25/2026 at approximately 14:15, SASP units initiated a traffic stop on subject vehicle for excessive speed. Vehicle failed to yield and engaged units in a high-speed vehicle pursuit (fleeing & eluding). PIT maneuver executed on Seaview Rd. Subject resisted commands and was subdued using control holds. Search incident to arrest revealed illegal firearms.");
         showToast("Loaded sample arrest report", "success");
     } else {
         setVal("postal", "Postal 1024 / Sandy Shores");
@@ -684,13 +841,19 @@ function loadExampleData() {
 
         setCheck("dir_north", true);
 
-        setVal("v1_title", "22349(a) VC - Exceeding 65 MPH Maximum Speed Limit");
-        const v1Type = document.getElementById("v1_type");
-        if (v1Type) v1Type.value = "Inf";
+        const v1Row = document.querySelector("#citationViolationsList .violation-entry-row:nth-child(1)");
+        setVal("v1_title", "P.C. [5E.01.5] - SPEEDING (21 MPH +)");
+        if (v1Row) {
+            const match1 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("5E.01.5"));
+            applyViolationClassification(v1Row, match1);
+        }
 
-        setVal("v2_title", "22107 VC - Unsafe Lane Change / Turning Without Signal");
-        const v2Type = document.getElementById("v2_type");
-        if (v2Type) v2Type.value = "Inf";
+        const v2Row = document.querySelector("#citationViolationsList .violation-entry-row:nth-child(2)");
+        setVal("v2_title", "P.C. [5E.04] - FAILURE TO MAINTAIN LANES");
+        if (v2Row) {
+            const match2 = (typeof violations !== "undefined" ? violations : []).find(v => v.code.includes("5E.04"));
+            applyViolationClassification(v2Row, match2);
+        }
 
         setCheck("enf_citation", true);
         setCheck("tow_no", true);
@@ -761,44 +924,38 @@ function initPillBehaviors() {
         intYes.addEventListener("change", () => { if (intYes.checked) intNo.checked = false; updatePreview(); });
     }
 
-    // Arrest Charge Classification pills (Fel / Misd / Inf - single select per row)
-    [1, 2, 3].forEach(row => {
-        const fel = document.getElementById(`arr_c${row}_fel`);
-        const misd = document.getElementById(`arr_c${row}_misd`);
-        const inf = document.getElementById(`arr_c${row}_inf`);
-        const group = [fel, misd, inf].filter(Boolean);
-        group.forEach(cb => {
-            cb.addEventListener("change", () => {
-                if (cb.checked) group.forEach(other => { if (other !== cb) other.checked = false; });
-                updatePreview();
-            });
-        });
-    });
-
     // Clear Citation Violation Buttons
-    document.querySelectorAll(".clear-violation-btn").forEach(btn => {
+    document.querySelectorAll("#citationViolationsList .clear-violation-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            const idx = btn.dataset.target;
-            const titleInput = document.getElementById(`v${idx}_title`);
-            const typeSelect = document.getElementById(`v${idx}_type`);
-            if (titleInput) titleInput.value = "";
-            if (typeSelect) typeSelect.selectedIndex = 0;
+            const row = btn.closest(".violation-entry-row");
+            const container = document.getElementById("citationViolationsList");
+            if (container && container.querySelectorAll(".violation-entry-row").length > 3) {
+                row.remove();
+                renumberViolationRows("citationViolationsList");
+            } else {
+                const titleInput = row.querySelector(".violation-search-input");
+                const typeSelect = row.querySelector("select");
+                if (titleInput) titleInput.value = "";
+                if (typeSelect) typeSelect.selectedIndex = 0;
+                applyViolationClassification(row, null);
+            }
             updatePreview();
         });
     });
 
     // Clear Arrest Charge Buttons
-    document.querySelectorAll(".clear-arr-charge-btn").forEach(btn => {
+    document.querySelectorAll("#arrestChargesList .clear-arr-charge-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            const idx = btn.dataset.target;
-            const titleInput = document.getElementById(`arr_c${idx}_title`);
-            const fel = document.getElementById(`arr_c${idx}_fel`);
-            const misd = document.getElementById(`arr_c${idx}_misd`);
-            const inf = document.getElementById(`arr_c${idx}_inf`);
-            if (titleInput) titleInput.value = "";
-            if (fel) fel.checked = false;
-            if (misd) misd.checked = false;
-            if (inf) inf.checked = false;
+            const row = btn.closest(".violation-entry-row");
+            const container = document.getElementById("arrestChargesList");
+            if (container && container.querySelectorAll(".violation-entry-row").length > 3) {
+                row.remove();
+                renumberViolationRows("arrestChargesList");
+            } else {
+                const titleInput = row.querySelector(".violation-search-input");
+                if (titleInput) titleInput.value = "";
+                applyViolationClassification(row, null);
+            }
             updatePreview();
         });
     });
@@ -807,16 +964,29 @@ function initPillBehaviors() {
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
     // Autocompletes for Citation Violations
-    setupViolationAutocomplete("v1_title", "v1_results", "v1_type");
-    setupViolationAutocomplete("v2_title", "v2_results", "v2_type");
-    setupViolationAutocomplete("v3_title", "v3_results", "v3_type");
+    document.querySelectorAll("#citationViolationsList .violation-entry-row").forEach(row => {
+        const input = row.querySelector(".violation-search-input");
+        const results = row.querySelector(".violation-results");
+        const typeSelect = row.querySelector("select");
+        if (input && results) {
+            setupViolationAutocomplete(input, results, typeSelect);
+        }
+    });
 
     // Autocompletes for Arrest Charges
-    setupViolationAutocomplete("arr_c1_title", "arr_c1_results", null, 1);
-    setupViolationAutocomplete("arr_c2_title", "arr_c2_results", null, 2);
-    setupViolationAutocomplete("arr_c3_title", "arr_c3_results", null, 3);
+    document.querySelectorAll("#arrestChargesList .violation-entry-row").forEach((row, idx) => {
+        const input = row.querySelector(".violation-search-input");
+        const results = row.querySelector(".violation-results");
+        if (input && results) {
+            setupViolationAutocomplete(input, results, null, idx + 1);
+        }
+    });
 
     initPillBehaviors();
+
+    // Add Violation / Charge Buttons
+    document.getElementById("addCitationViolationBtn")?.addEventListener("click", addCitationViolationRow);
+    document.getElementById("addArrestChargeBtn")?.addEventListener("click", addArrestChargeRow);
 
     // Tab buttons
     document.getElementById("tabCitation")?.addEventListener("click", () => switchReportType("citation"));

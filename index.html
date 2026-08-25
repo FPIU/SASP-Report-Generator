@@ -8,6 +8,7 @@
     <meta name="description"
         content="San Andreas State Police CAD Report Generator & MDT Tool. Standardized Traffic Citation & Arrest Reports.">
 
+    <link rel="icon" type="image/png" href="assets/sasp_logo.png">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -18,19 +19,7 @@
         <div class="header-inner">
             <div class="brand-section">
                 <div class="badge-logo" title="San Andreas State Police">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="50,6 63,33 94,36 71,59 78,90 50,75 22,90 29,59 6,36 37,33" fill="#1e3a8a"
-                            stroke="#d97706" stroke-width="3" />
-                        <circle cx="50" cy="51" r="21" fill="#0f172a" stroke="#d97706" stroke-width="1.8" />
-                        <text x="50" y="48"
-                            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-                            font-size="11" font-weight="900" fill="#f8fafc" text-anchor="middle"
-                            letter-spacing="1">SASP</text>
-                        <text x="50" y="60"
-                            font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-                            font-size="6.5" font-weight="700" fill="#d97706" text-anchor="middle"
-                            letter-spacing="0.5">STATE POLICE</text>
-                    </svg>
+                    <img src="assets/sasp_logo.png" alt="San Andreas State Police Logo" class="brand-logo-img">
                 </div>
                 <div class="brand-text">
                     <h1>San Andreas State Police</h1>
@@ -426,7 +415,7 @@
                                 </div>
                             </div>
 
-                            <div class="violations-list-container">
+                            <div id="citationViolationsList" class="violations-list-container">
                                 <!-- Violation Row 1 -->
                                 <div class="violation-entry-row" data-index="1">
                                     <div class="violation-row-num">#1</div>
@@ -487,6 +476,13 @@
                                     <button type="button" class="btn btn-outline btn-sm clear-violation-btn"
                                         data-target="3" title="Clear violation">✕</button>
                                 </div>
+                            </div>
+
+                            <div style="margin-top: 10px; display: flex; justify-content: flex-start;">
+                                <button type="button" id="addCitationViolationBtn" class="btn-add-violation">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Add Violation
+                                </button>
                             </div>
                         </div>
 
@@ -759,7 +755,7 @@
                                 </div>
                             </div>
 
-                            <div class="violations-list-container">
+                            <div id="arrestChargesList" class="violations-list-container">
                                 <!-- Charge 1 -->
                                 <div class="violation-entry-row">
                                     <div class="violation-row-num">#1</div>
@@ -804,6 +800,13 @@
                                     </div>
                                     <button type="button" class="btn btn-outline btn-sm clear-arr-charge-btn" data-target="3" title="Clear">✕</button>
                                 </div>
+                            </div>
+
+                            <div style="margin-top: 10px; display: flex; justify-content: flex-start;">
+                                <button type="button" id="addArrestChargeBtn" class="btn-add-violation">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Add Charge
+                                </button>
                             </div>
                         </div>
 
@@ -1106,6 +1109,58 @@
 
         </div>
     </main>
+
+    <!-- IA Disciplinary Warning Modal for Felony on Citation -->
+    <div id="iaWarningModal" class="modal-overlay" style="display: none;" aria-hidden="true" role="dialog" aria-labelledby="iaModalTitle">
+        <div class="modal-card modal-warning">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="ia-shield-badge">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        INTERNAL AFFAIRS ADVISORY
+                    </span>
+                    <h3 id="iaModalTitle" class="modal-title">POLICY VIOLATION WARNING: FELONY CITATION</h3>
+                </div>
+                <button type="button" class="modal-close-btn" id="iaModalCloseBtn" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="ia-alert-banner">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#ef4444" stroke-width="2.2" style="flex-shrink:0;">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div class="ia-alert-text">
+                        <strong>MANDATORY CUSTODIAL ARREST REQUIRED</strong>
+                        <p>You are adding a <span class="text-danger-highlight">FELONY CHARGE</span> to a Traffic Citation.</p>
+                    </div>
+                </div>
+                <div class="ia-details-box">
+                    <p><strong>Departmental General Order § 4.12 — Mandatory Felony Custody:</strong></p>
+                    <p>All sworn SASP personnel are strictly prohibited from issuing a citation or cite-and-release for felony offenses. Felony suspects must be arrested and booked through a formal detention facility.</p>
+                    <div class="ia-penalty-warning">
+                        ⚠️ <strong>Disciplinary Advisory:</strong> Issuing a citation for a felony instead of arresting constitutes an unauthorized discharge of duty and will result in <strong>Internal Affairs (IA) Disciplinary Actions</strong> and administrative sanctions.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="iaSwitchToArrestBtn" class="btn btn-primary" style="background: #dc2626; border-color: #ef4444;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Switch to Arrest Report
+                </button>
+                <button type="button" id="iaDismissBtn" class="btn btn-outline">
+                    Acknowledge Warning
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notifications Container -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
