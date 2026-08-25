@@ -1,6 +1,3 @@
-// Built-in offline database of True Night RP (TNRP) Global Penal and Vehicle Codes
-// Source: Official Server Penal Code Sheet (Titles 1A through 7G)
-
 const defaultViolations = [
     {
         "code": "P.C. [1A.01.1]",
@@ -856,15 +853,16 @@ let violations = [...defaultViolations];
 
 async function loadViolations() {
     try {
-        const response = await fetch("data/pc_vc.json");
-        if (response.ok) {
-            const externalData = await response.json();
-            if (Array.isArray(externalData) && externalData.length > 0) {
-                violations = externalData;
+        const res = await fetch("data/pc_vc.json");
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+                violations = data;
+                return violations;
             }
         }
-    } catch (e) {
-        // Fallback to rich embedded defaults
+    } catch {
         violations = [...defaultViolations];
     }
+    return violations;
 }

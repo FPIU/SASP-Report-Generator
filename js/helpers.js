@@ -1,4 +1,4 @@
-// SASP MDT Helpers & Interactive Utilities
+let pendingFelonyItem = null;
 
 function showToast(message, type = "success") {
     let container = document.getElementById("toastContainer");
@@ -15,12 +15,9 @@ function showToast(message, type = "success") {
         <span class="toast-indicator"></span>
         <span class="toast-message">${message}</span>
     `;
-    
-    container.appendChild(toast);
 
-    setTimeout(() => {
-        toast.classList.add("toast-show");
-    }, 10);
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("toast-show"));
 
     setTimeout(() => {
         toast.classList.remove("toast-show");
@@ -28,33 +25,22 @@ function showToast(message, type = "success") {
     }, 3200);
 }
 
-// Single-choice pill group helper (makes a set of checkboxes behave like radio buttons or toggles)
 function setupPillGroup(groupClass, allowNone = true) {
-    const containers = document.querySelectorAll(groupClass);
-    containers.forEach(container => {
-        const checkboxes = container.querySelectorAll("input[type='checkbox']");
-        checkboxes.forEach(cb => {
-            cb.addEventListener("change", () => {
-                if (cb.checked) {
-                    checkboxes.forEach(other => {
-                        if (other !== cb) other.checked = false;
-                    });
+    document.querySelectorAll(groupClass).forEach(container => {
+        const boxes = Array.from(container.querySelectorAll("input[type='checkbox']"));
+        boxes.forEach(box => {
+            box.addEventListener("change", () => {
+                if (box.checked) {
+                    boxes.filter(other => other !== box).forEach(other => { other.checked = false; });
                 } else if (!allowNone) {
-                    cb.checked = true;
+                    box.checked = true;
                 }
-                if (typeof updatePreview === "function") {
-                    updatePreview();
-                }
+                if (typeof updatePreview === "function") updatePreview();
             });
         });
     });
 }
 
-let pendingFelonyItem = null;
-
-/**
- * Display Internal Affairs Disciplinary Warning modal when Felony is selected for a Traffic Citation
- */
 function showIaFelonyWarning(item = null, rowElement = null) {
     const modal = document.getElementById("iaWarningModal");
     if (!modal) {
@@ -63,52 +49,41 @@ function showIaFelonyWarning(item = null, rowElement = null) {
     }
 
     pendingFelonyItem = item;
-
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
 
-    // Close button
-    const closeBtn = document.getElementById("iaModalCloseBtn");
-    if (closeBtn) {
-        closeBtn.onclick = () => {
-            modal.style.display = "none";
-            modal.setAttribute("aria-hidden", "true");
-        };
-    }
+    const hideModal = () => {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+    };
 
-    // Dismiss button
+    const closeBtn = document.getElementById("iaModalCloseBtn");
+    if (closeBtn) closeBtn.onclick = hideModal;
+
     const dismissBtn = document.getElementById("iaDismissBtn");
     if (dismissBtn) {
         dismissBtn.onclick = () => {
-            modal.style.display = "none";
-            modal.setAttribute("aria-hidden", "true");
+            hideModal();
             showToast("⚠️ IA WARNING: Felonies require custodial arrest!", "error");
         };
     }
 
-    // Switch to Arrest Report button
     const switchBtn = document.getElementById("iaSwitchToArrestBtn");
     if (switchBtn) {
         switchBtn.onclick = () => {
-            modal.style.display = "none";
-            modal.setAttribute("aria-hidden", "true");
+            hideModal();
 
             if (typeof switchReportType === "function") {
                 switchReportType("arrest");
             }
 
-            // Populate charge in arrest report
             if (pendingFelonyItem) {
-                const arrestContainer = document.getElementById("arrestChargesList");
-                if (arrestContainer) {
-                    const firstRow = arrestContainer.querySelector(".violation-entry-row");
-                    if (firstRow) {
-                        const titleInput = firstRow.querySelector(".violation-search-input");
-                        if (titleInput) {
-                            titleInput.value = `${pendingFelonyItem.code} - ${pendingFelonyItem.description}`;
-                            applyViolationClassification(firstRow, pendingFelonyItem);
-                        }
-                    }
+                const arrestList = document.getElementById("arrestChargesList");
+                const firstRow = arrestList?.querySelector(".violation-entry-row");
+                const titleInput = firstRow?.querySelector(".violation-search-input");
+                if (firstRow && titleInput) {
+                    titleInput.value = `${pendingFelonyItem.code} - ${pendingFelonyItem.description}`;
+                    applyViolationClassification(firstRow, pendingFelonyItem);
                 }
             }
 
@@ -118,238 +93,215 @@ function showIaFelonyWarning(item = null, rowElement = null) {
     }
 }
 
-/**
- * Apply preset classification (Felony / Misdemeanor / Infraction) to a violation/charge row.
- * Automatically checks the appropriate level and locks/grays out buttons if preset.
- * Unlocks buttons if wobbler or custom.
- */
 function applyViolationClassification(rowElement, item) {
     if (!rowElement) return;
 
-    // Check if this is an Arrest charge row (has Fel/Misd/Inf checkboxes)
     const fel = rowElement.querySelector("input[id*='_fel'], input[data-type='fel']");
     const misd = rowElement.querySelector("input[id*='_misd'], input[data-type='misd']");
     const inf = rowElement.querySelector("input[id*='_inf'], input[data-type='inf']");
-    const pillLabels = rowElement.querySelectorAll(".pill-btn");
+    const pills = rowElement.querySelectorAll(".pill-btn");
+
+    const resetPillStyles = (lbl) => {
+        lbl.classList.remove("pill-locked", "pill-locked-felony", "pill-locked-misdemeanor", "pill-locked-infraction");
+    };
 
     if (fel && misd && inf) {
-        // Helper to clear locked color classes
-        const clearPillColors = (l) => {
-            l.classList.remove("pill-locked", "pill-locked-felony", "pill-locked-misdemeanor", "pill-locked-infraction");
-        };
-
         if (item) {
-            const isFel = Boolean(item.felony);
-            const isMisd = Boolean(item.misdemeanor);
-            const isInf = Boolean(item.infraction);
+            const hasFel = Boolean(item.felony);
+            const hasMisd = Boolean(item.misdemeanor);
+            const hasInf = Boolean(item.infraction);
 
-            // Preset single-classification: lock/gray out buttons
-            if (isFel && !isMisd && !isInf) {
+            if (hasFel && !hasMisd && !hasInf) {
                 fel.checked = true;
                 misd.checked = false;
                 inf.checked = false;
+                fel.disabled = misd.disabled = inf.disabled = true;
 
-                fel.disabled = true;
-                misd.disabled = true;
-                inf.disabled = true;
-
-                pillLabels.forEach(l => {
-                    clearPillColors(l);
-                    l.classList.add("pill-locked");
-                    const inputInside = l.querySelector("input");
-                    if (inputInside && inputInside.checked) {
-                        l.classList.add("pill-locked-felony");
-                    }
+                pills.forEach(p => {
+                    resetPillStyles(p);
+                    p.classList.add("pill-locked");
+                    if (p.querySelector("input")?.checked) p.classList.add("pill-locked-felony");
                 });
-            } else if (isMisd && !isFel && !isInf) {
+            } else if (hasMisd && !hasFel && !hasInf) {
                 fel.checked = false;
                 misd.checked = true;
                 inf.checked = false;
+                fel.disabled = misd.disabled = inf.disabled = true;
 
-                fel.disabled = true;
-                misd.disabled = true;
-                inf.disabled = true;
-
-                pillLabels.forEach(l => {
-                    clearPillColors(l);
-                    l.classList.add("pill-locked");
-                    const inputInside = l.querySelector("input");
-                    if (inputInside && inputInside.checked) {
-                        l.classList.add("pill-locked-misdemeanor");
-                    }
+                pills.forEach(p => {
+                    resetPillStyles(p);
+                    p.classList.add("pill-locked");
+                    if (p.querySelector("input")?.checked) p.classList.add("pill-locked-misdemeanor");
                 });
-            } else if (isInf && !isFel && !isMisd) {
+            } else if (hasInf && !hasFel && !hasMisd) {
                 fel.checked = false;
                 misd.checked = false;
                 inf.checked = true;
+                fel.disabled = misd.disabled = inf.disabled = true;
 
-                fel.disabled = true;
-                misd.disabled = true;
-                inf.disabled = true;
-
-                pillLabels.forEach(l => {
-                    clearPillColors(l);
-                    l.classList.add("pill-locked");
-                    const inputInside = l.querySelector("input");
-                    if (inputInside && inputInside.checked) {
-                        l.classList.add("pill-locked-infraction");
-                    }
+                pills.forEach(p => {
+                    resetPillStyles(p);
+                    p.classList.add("pill-locked");
+                    if (p.querySelector("input")?.checked) p.classList.add("pill-locked-infraction");
                 });
-            } else if (isFel && isMisd) {
-                // Wobbler charge: keep enabled
-                fel.disabled = false;
-                misd.disabled = false;
-                inf.disabled = false;
-                pillLabels.forEach(clearPillColors);
-
-                if (!fel.checked && !misd.checked) {
-                    misd.checked = true; // Default to Misd
-                }
+            } else if (hasFel && hasMisd) {
+                fel.disabled = misd.disabled = inf.disabled = false;
+                pills.forEach(resetPillStyles);
+                if (!fel.checked && !misd.checked) misd.checked = true;
                 inf.checked = false;
             } else {
-                // Fallback
-                fel.disabled = false;
-                misd.disabled = false;
-                inf.disabled = false;
-                pillLabels.forEach(clearPillColors);
+                fel.disabled = misd.disabled = inf.disabled = false;
+                pills.forEach(resetPillStyles);
             }
         } else {
-            // No item (custom text or cleared): unlock all buttons
-            fel.disabled = false;
-            misd.disabled = false;
-            inf.disabled = false;
-            pillLabels.forEach(clearPillColors);
+            fel.disabled = misd.disabled = inf.disabled = false;
+            pills.forEach(resetPillStyles);
 
-            const textInput = rowElement.querySelector(".violation-search-input");
-            if (!textInput || !textInput.value.trim()) {
-                fel.checked = false;
-                misd.checked = false;
-                inf.checked = false;
+            const searchInp = rowElement.querySelector(".violation-search-input");
+            if (!searchInp?.value.trim()) {
+                fel.checked = misd.checked = inf.checked = false;
             }
         }
     }
 
-    // Check if this is a Citation violation row (has select dropdown)
     const typeSelect = rowElement.querySelector("select");
     const isCitationRow = Boolean(rowElement.closest("#citationViolationsList") || typeSelect);
 
     if (typeSelect && isCitationRow) {
-        // Helper to clear locked color classes on select
-        const clearSelectColors = () => {
+        const resetSelectStyles = () => {
             typeSelect.classList.remove("select-locked", "select-locked-felony", "select-locked-misdemeanor", "select-locked-infraction");
         };
 
         if (item) {
             if (item.felony && !item.misdemeanor) {
-                // Definite felony
                 typeSelect.value = "Felony";
                 typeSelect.disabled = true;
-                clearSelectColors();
+                resetSelectStyles();
                 typeSelect.classList.add("select-locked", "select-locked-felony");
                 showIaFelonyWarning(item, rowElement);
             } else if (item.misdemeanor && !item.felony) {
-                // Definite misdemeanor
                 typeSelect.value = "Misd";
                 typeSelect.disabled = true;
-                clearSelectColors();
+                resetSelectStyles();
                 typeSelect.classList.add("select-locked", "select-locked-misdemeanor");
             } else if (item.infraction && !item.felony && !item.misdemeanor) {
-                // Definite infraction
                 typeSelect.value = "Inf";
                 typeSelect.disabled = true;
-                clearSelectColors();
+                resetSelectStyles();
                 typeSelect.classList.add("select-locked", "select-locked-infraction");
             } else if (item.felony && item.misdemeanor) {
-                // Wobbler — default to Misd but let officer choose
                 typeSelect.value = "Misd";
                 typeSelect.disabled = false;
-                clearSelectColors();
+                resetSelectStyles();
             } else {
                 typeSelect.disabled = false;
-                clearSelectColors();
+                resetSelectStyles();
             }
         } else {
-            const textInput = rowElement.querySelector(".violation-search-input");
-            if (!textInput || !textInput.value.trim()) {
+            const searchInp = rowElement.querySelector(".violation-search-input");
+            if (!searchInp?.value.trim()) {
                 typeSelect.value = "";
             }
             typeSelect.disabled = false;
-            clearSelectColors();
+            resetSelectStyles();
         }
     }
 }
 
-/**
- * Fuzzy / Token search through violations database
- */
 function findMatchingViolations(query) {
     const list = (typeof violations !== "undefined" && Array.isArray(violations)) ? violations : [];
     if (!query || query.length < 2) return [];
 
-    const q = query.toLowerCase().trim();
-    const terms = q.split(/[\s,+/&|—\-]+/).filter(t => t.length > 0);
+    const normQuery = query.toLowerCase().trim();
+    const tokens = normQuery.split(/[\s,+/&|—\-]+/).filter(Boolean);
+    const cleanAlphaQuery = normQuery.replace(/[^a-z0-9]/g, "");
 
     return list.filter(v => {
-        const combined = `${v.code} ${v.description} ${v.classification || ""}`.toLowerCase();
-        
-        // Exact substring match
-        if (combined.includes(q)) return true;
+        const fullText = `${v.code} ${v.description} ${v.classification || ""}`.toLowerCase();
+        if (fullText.includes(normQuery)) return true;
+        if (tokens.length > 1 && tokens.every(t => fullText.includes(t))) return true;
 
-        // All terms match
-        if (terms.length > 1 && terms.every(t => combined.includes(t))) return true;
-
-        // Code match (e.g. searching "4D.02" or "1A.01")
-        const cleanCode = v.code.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const cleanQ = q.replace(/[^a-z0-9]/g, '');
-        if (cleanQ.length >= 3 && cleanCode.includes(cleanQ)) return true;
+        const cleanCode = v.code.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (cleanAlphaQuery.length >= 3 && cleanCode.includes(cleanAlphaQuery)) return true;
 
         return false;
     }).slice(0, 10);
 }
 
-/**
- * Attach autocomplete, classification detection, and auto-locking to a violation/charge row.
- * Supports passing either string element IDs or direct DOM element references.
- */
 function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget = null, arrestRowIndex = null) {
     const input = typeof inputTarget === "string" ? document.getElementById(inputTarget) : inputTarget;
     const results = typeof resultsTarget === "string" ? document.getElementById(resultsTarget) : resultsTarget;
     const typeSelect = typeof typeSelectTarget === "string" ? document.getElementById(typeSelectTarget) : typeSelectTarget;
-    
+
     if (!input || !results) return;
 
-    const rowElement = input.closest(".violation-entry-row");
+    const row = input.closest(".violation-entry-row");
 
-    // Mutual exclusion on Fel / Misd / Inf checkboxes in this row (for arrest charges)
-    if (rowElement) {
-        const fel = rowElement.querySelector("input[id*='_fel'], input[data-type='fel']");
-        const misd = rowElement.querySelector("input[id*='_misd'], input[data-type='misd']");
-        const inf = rowElement.querySelector("input[id*='_inf'], input[data-type='inf']");
-        const group = [fel, misd, inf].filter(Boolean);
+    if (row) {
+        const fel = row.querySelector("input[id*='_fel'], input[data-type='fel']");
+        const misd = row.querySelector("input[id*='_misd'], input[data-type='misd']");
+        const inf = row.querySelector("input[id*='_inf'], input[data-type='inf']");
+        const levelGroup = [fel, misd, inf].filter(Boolean);
 
-        group.forEach(cb => {
-            cb.onchange = () => {
-                if (cb.checked) {
-                    group.forEach(other => { if (other !== cb) other.checked = false; });
+        levelGroup.forEach(box => {
+            box.onchange = () => {
+                if (box.checked) {
+                    levelGroup.filter(other => other !== box).forEach(other => { other.checked = false; });
                 }
                 if (typeof updatePreview === "function") updatePreview();
             };
         });
 
-        // Citation select change listener for Felony warning
         if (typeSelect) {
             typeSelect.onchange = () => {
                 if (typeSelect.value === "Felony") {
-                    const textVal = input.value.trim();
-                    const match = (typeof violations !== "undefined" ? violations : []).find(v => 
-                        textVal && v.description.toLowerCase() === textVal.toLowerCase()
-                    );
-                    showIaFelonyWarning(match || { code: "FELONY", description: textVal || "Custom Charge", felony: true }, rowElement);
+                    const text = input.value.trim();
+                    const dataset = (typeof violations !== "undefined" ? violations : []);
+                    const found = dataset.find(v => text && v.description.toLowerCase() === text.toLowerCase());
+                    showIaFelonyWarning(found || { code: "FELONY", description: text || "Custom Charge", felony: true }, row);
                 }
                 if (typeof updatePreview === "function") updatePreview();
             };
         }
     }
+
+    const renderOption = (item) => {
+        const opt = document.createElement("div");
+        opt.className = "violation-option";
+
+        const title = document.createElement("span");
+        title.className = "violation-desc-text";
+        title.textContent = item.description;
+
+        const badge = document.createElement("span");
+        const upperClass = (item.classification || "").toUpperCase();
+        let badgeVariant = "badge-inf";
+
+        if (upperClass.includes("FELONY") || item.felony) {
+            badgeVariant = "badge-fel";
+        } else if (upperClass.includes("MISDEMEANOR") || item.misdemeanor) {
+            badgeVariant = "badge-misd";
+        }
+
+        badge.className = `violation-class-badge ${badgeVariant}`;
+        badge.textContent = item.classification || (item.felony ? "FELONY" : item.misdemeanor ? "MISDEMEANOR" : "INFRACTION");
+
+        opt.appendChild(title);
+        opt.appendChild(badge);
+
+        opt.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            input.value = item.description;
+            input.dataset.description = item.description;
+            input.dataset.classification = item.classification || "";
+
+            applyViolationClassification(row, item);
+            results.innerHTML = "";
+            if (typeof updatePreview === "function") updatePreview();
+        });
+
+        return opt;
+    };
 
     input.addEventListener("input", () => {
         const query = input.value.trim();
@@ -357,77 +309,31 @@ function setupViolationAutocomplete(inputTarget, resultsTarget, typeSelectTarget
 
         if (!query || query.length < 2) {
             if (!query) {
-                applyViolationClassification(rowElement, null);
+                applyViolationClassification(row, null);
                 if (typeof updatePreview === "function") updatePreview();
             }
             return;
         }
 
-        // Check if current text is an exact match for any violation
-        const exactMatch = (typeof violations !== "undefined" ? violations : []).find(v => 
+        const exact = (typeof violations !== "undefined" ? violations : []).find(v =>
             v.description.toLowerCase() === query.toLowerCase()
         );
 
-        if (exactMatch) {
-            applyViolationClassification(rowElement, exactMatch);
-        } else {
-            // Custom text entered -> unlock buttons so user can select level manually
-            applyViolationClassification(rowElement, null);
-        }
+        applyViolationClassification(row, exact || null);
 
         const matches = findMatchingViolations(query);
-
-        matches.forEach(item => {
-            const row = document.createElement("div");
-            row.className = "violation-option";
-
-            const descSpan = document.createElement("span");
-            descSpan.className = "violation-desc-text";
-            descSpan.textContent = item.description;
-
-            // Classification badge
-            const classSpan = document.createElement("span");
-            let badgeClass = "badge-inf";
-            const upperClass = (item.classification || "").toUpperCase();
-            if (upperClass.includes("FELONY")) {
-                badgeClass = "badge-fel";
-            } else if (upperClass.includes("MISDEMEANOR")) {
-                badgeClass = "badge-misd";
-            }
-            classSpan.className = `violation-class-badge ${badgeClass}`;
-            classSpan.textContent = item.classification || (item.felony ? "FELONY" : item.misdemeanor ? "MISDEMEANOR" : "INFRACTION");
-
-            row.appendChild(descSpan);
-            row.appendChild(classSpan);
-
-            row.addEventListener("mousedown", (e) => {
-                e.preventDefault(); // Prevent input blur before click registers
-                input.value = item.description;
-                input.dataset.description = item.description;
-                input.dataset.classification = item.classification || "";
-
-                applyViolationClassification(rowElement, item);
-
-                results.innerHTML = "";
-                if (typeof updatePreview === "function") updatePreview();
-            });
-
-            results.appendChild(row);
-        });
+        matches.forEach(item => results.appendChild(renderOption(item)));
     });
 
     input.addEventListener("blur", () => {
-        setTimeout(() => {
-            results.innerHTML = "";
-        }, 200);
+        setTimeout(() => { results.innerHTML = ""; }, 200);
     });
 
     input.addEventListener("focus", () => {
-        if (input.value.trim().length >= 2) {
-            const matches = findMatchingViolations(input.value.trim());
-            if (matches.length > 0) {
-                input.dispatchEvent(new Event("input"));
-            }
+        const val = input.value.trim();
+        if (val.length >= 2) {
+            const matches = findMatchingViolations(val);
+            if (matches.length > 0) input.dispatchEvent(new Event("input"));
         }
     });
 

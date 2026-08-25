@@ -14,7 +14,6 @@
 
 <body>
 
-    <!-- Header Navigation -->
     <header class="app-header">
         <div class="header-inner">
             <div class="brand-section">
@@ -30,13 +29,13 @@
             <div class="header-actions">
                 <button id="themeToggle" class="theme-toggle" title="Toggle light / dark mode"
                     aria-label="Toggle theme">
-                    <!-- Moon icon (shown in dark mode) -->
+
                     <svg class="theme-icon theme-icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
-                    <!-- Sun icon (shown in light mode) -->
+
                     <svg class="theme-icon theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -56,11 +55,9 @@
         </div>
     </header>
 
-    <!-- Main Workspace -->
     <main class="main-wrapper">
         <div class="cad-layout-grid">
 
-            <!-- Left Side: Form Generator Card -->
             <section class="card-panel form-panel">
                 <div class="panel-header">
                     <div class="panel-title-group">
@@ -68,7 +65,6 @@
                         <p id="activeReportDesc" class="panel-desc">SAN ANDREAS STATE POLICE — TRAFFIC REPORT</p>
                     </div>
 
-                    <!-- Hidden Select for Script Compatibility -->
                     <select id="reportType" style="display:none;">
                         <option value="citation">Traffic Report</option>
                         <option value="arrest">Arrest Report</option>
@@ -76,7 +72,7 @@
                 </div>
 
                 <div class="panel-body">
-                    <!-- Report Switcher Tabs -->
+
                     <div class="report-tabs-bar">
                         <button type="button" class="report-tab active" data-report="citation" id="tabCitation">
                             Traffic Report
@@ -86,7 +82,6 @@
                         </button>
                     </div>
 
-                    <!-- Action Toolbar -->
                     <div class="toolbar-actions">
                         <button type="button" id="filldatetime" class="btn btn-primary btn-sm">
                             <svg class="btn-icon" viewBox="0 0 24 24" width="14" height="14" fill="none"
@@ -104,12 +99,8 @@
                         </button>
                     </div>
 
-                    <!-- =========================================
-                         1. TRAFFIC CITATION FORM
-                         ========================================= -->
                     <div id="citationForm" class="citation-form-container report-form-view">
 
-                        <!-- 01. Incident Details -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">01</span>
@@ -140,7 +131,6 @@
                             </div>
                         </div>
 
-                        <!-- 02. Reporting Officer Section (Above Driver Info) -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">02</span>
@@ -166,7 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- 03. Driver Information -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">03</span>
@@ -186,7 +175,6 @@
                             </div>
                         </div>
 
-                        <!-- 04. Vehicle Information -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">04</span>
@@ -215,7 +203,6 @@
                             </div>
                         </div>
 
-                        <!-- 05. Stop Basis (PC/RS) -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">05</span>
@@ -227,7 +214,7 @@
                             </div>
 
                             <div class="stop-basis-grid">
-                                <!-- Column 1 -->
+
                                 <div class="stop-basis-col">
                                     <label class="basis-chip">
                                         <input type="checkbox" id="basis_speed">
@@ -266,7 +253,6 @@
                                     </label>
                                 </div>
 
-                                <!-- Column 2 -->
                                 <div class="stop-basis-col">
                                     <label class="basis-chip">
                                         <input type="checkbox" id="basis_stopsign">
@@ -305,7 +291,6 @@
                                     </label>
                                 </div>
 
-                                <!-- Column 3 -->
                                 <div class="stop-basis-col">
                                     <label class="basis-chip">
                                         <input type="checkbox" id="basis_yield">
@@ -350,7 +335,6 @@
                             </div>
                         </div>
 
-                        <!-- 06. Speed & Direction -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">06</span>
@@ -420,7 +404,6 @@
                             </div>
                         </div>
 
-                        <!-- 07. Violations -->
                         <div class="form-section-card section-card-violations">
                             <div class="section-badge-header">
                                 <span class="section-num">07</span>
@@ -432,12 +415,12 @@
                             </div>
 
                             <div id="citationViolationsList" class="violations-list-container">
-                                <!-- Violation Row 1 -->
+
                                 <div class="violation-entry-row" data-index="1">
                                     <div class="violation-row-num">#1</div>
                                     <div class="violation-search-box">
                                         <input type="text" id="v1_title" class="form-input violation-search-input"
-                                            placeholder="Type code or search violation (e.g. 22349(a) VC - Speeding)..."
+                                            placeholder="Type code or search violation (e.g. SPEEDING [11-15 MPH] )..."
                                             autocomplete="off">
                                         <div id="v1_results" class="violation-results"></div>
                                     </div>
@@ -453,7 +436,6 @@
                                         data-target="1" title="Clear violation">✕</button>
                                 </div>
 
-                                <!-- Violation Row 2 -->
                                 <div class="violation-entry-row" data-index="2">
                                     <div class="violation-row-num">#2</div>
                                     <div class="violation-search-box">
@@ -473,7 +455,6 @@
                                         data-target="2" title="Clear violation">✕</button>
                                 </div>
 
-                                <!-- Violation Row 3 -->
                                 <div class="violation-entry-row" data-index="3">
                                     <div class="violation-row-num">#3</div>
                                     <div class="violation-search-box">
@@ -506,7 +487,6 @@
                             </div>
                         </div>
 
-                        <!-- 08. Enforcement & Impound -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">08</span>
@@ -565,7 +545,6 @@
                             </div>
                         </div>
 
-                        <!-- 09. Defendant & Notes -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">09</span>
@@ -602,13 +581,8 @@
 
                     </div>
 
-
-                    <!-- =========================================
-                         2. ARREST REPORT FORM
-                         ========================================= -->
                     <div id="arrestForm" class="arrest-form-container report-form-view" style="display: none;">
 
-                        <!-- A01. Incident & Location -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">01</span>
@@ -639,7 +613,6 @@
                             </div>
                         </div>
 
-                        <!-- A02. Reporting Officer Section (Above Subject Info) -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">02</span>
@@ -666,7 +639,6 @@
                             </div>
                         </div>
 
-                        <!-- A03. Subject Information -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">03</span>
@@ -695,7 +667,6 @@
                             </div>
                         </div>
 
-                        <!-- A04. Associated Vehicle -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">04</span>
@@ -726,7 +697,6 @@
                             </div>
                         </div>
 
-                        <!-- A05. Arrest Basis (PC/RS) -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">05</span>
@@ -777,7 +747,6 @@
                             </div>
                         </div>
 
-                        <!-- A06. Offenses / Charges -->
                         <div class="form-section-card section-card-violations">
                             <div class="section-badge-header">
                                 <span class="section-num">06</span>
@@ -789,7 +758,7 @@
                             </div>
 
                             <div id="arrestChargesList" class="violations-list-container">
-                                <!-- Charge 1 -->
+
                                 <div class="violation-entry-row">
                                     <div class="violation-row-num">#1</div>
                                     <div class="violation-search-box">
@@ -810,7 +779,6 @@
                                         data-target="1" title="Clear">✕</button>
                                 </div>
 
-                                <!-- Charge 2 -->
                                 <div class="violation-entry-row">
                                     <div class="violation-row-num">#2</div>
                                     <div class="violation-search-box">
@@ -830,7 +798,6 @@
                                         data-target="2" title="Clear">✕</button>
                                 </div>
 
-                                <!-- Charge 3 -->
                                 <div class="violation-entry-row">
                                     <div class="violation-row-num">#3</div>
                                     <div class="violation-search-box">
@@ -863,7 +830,6 @@
                             </div>
                         </div>
 
-                        <!-- A07. Miranda & Interviews -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">07</span>
@@ -932,7 +898,6 @@
                             </div>
                         </div>
 
-                        <!-- A08. Search & Seizure -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">08</span>
@@ -965,7 +930,6 @@
                             </div>
                         </div>
 
-                        <!-- A09. Evidence -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">09</span>
@@ -1021,7 +985,6 @@
                             </div>
                         </div>
 
-                        <!-- A10. Use of Force & Medical -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">10</span>
@@ -1082,7 +1045,6 @@
                             </div>
                         </div>
 
-                        <!-- A11. Booking & Disposition -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">11</span>
@@ -1145,7 +1107,6 @@
                             </div>
                         </div>
 
-                        <!-- A12. Officers & Narrative -->
                         <div class="form-section-card">
                             <div class="section-badge-header">
                                 <span class="section-num">12</span>
@@ -1190,7 +1151,6 @@
                 </div>
             </section>
 
-            <!-- Right Side: Live CAD Monospace Preview Panel -->
             <aside class="cad-preview-container">
                 <div class="card-panel">
                     <div class="terminal-header">
@@ -1224,7 +1184,6 @@
         </div>
     </main>
 
-    <!-- IA Disciplinary Warning Modal for Felony on Citation -->
     <div id="iaWarningModal" class="modal-overlay" style="display: none;" aria-hidden="true" role="dialog"
         aria-labelledby="iaModalTitle">
         <div class="modal-card modal-warning">
@@ -1286,10 +1245,8 @@
         </div>
     </div>
 
-    <!-- Toast Notifications Container -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-    <!-- Scripts -->
     <script src="js/helpers.js"></script>
     <script src="js/database.js"></script>
     <script src="js/script.js"></script>

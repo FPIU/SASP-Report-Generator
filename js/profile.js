@@ -1,1 +1,0 @@
-// Profile module deprecated - all officer controls removed as requested.
