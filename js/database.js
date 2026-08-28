@@ -249,7 +249,7 @@ const defaultViolations = [
     },
     {
         "code": "P.C. [2B.08]",
-        "description": "KNOWINGLY RECEIVING STOLEN GOODS / POSSESSION OF STOLEN GOODS",
+        "description": "POSSESSION OF STOLEN PROPERTY",
         "classification": "FELONY",
         "felony": true,
         "misdemeanor": false,
@@ -402,9 +402,9 @@ const defaultViolations = [
     {
         "code": "P.C. [4D.01]",
         "description": "AIDING AND ABBETTING",
-        "classification": "MISDEMEANOR / FELONY",
+        "classification": "FELONY",
         "felony": true,
-        "misdemeanor": true,
+        "misdemeanor": false,
         "infraction": false
     },
     {
@@ -425,7 +425,7 @@ const defaultViolations = [
     },
     {
         "code": "P.C. [4D.04]",
-        "description": "FAILURE TO COMPLY WITH A PEACE OFFICER / OBSTRUCTION",
+        "description": "FAILURE TO COMPLY WITH A PEACE OFFICER",
         "classification": "MISDEMEANOR",
         "felony": false,
         "misdemeanor": true,
@@ -450,14 +450,6 @@ const defaultViolations = [
     {
         "code": "P.C. [4D.07]",
         "description": "BRIBERY",
-        "classification": "FELONY",
-        "felony": true,
-        "misdemeanor": false,
-        "infraction": false
-    },
-    {
-        "code": "P.C. [4D.08]",
-        "description": "PERJURY OR FALSIFYING INFORMATION",
         "classification": "FELONY",
         "felony": true,
         "misdemeanor": false,
@@ -894,7 +886,399 @@ const defaultViolations = [
         "felony": false,
         "misdemeanor": true,
         "infraction": false
-    }
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "FAILURE TO REPORT A CRIME",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "PROVIDING FALSE IDENTIFICATION",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "VIOLATION OF PROBATION",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "FALSE 911 CALL",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "RESISTING WITHOUT VIOLENCE",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "OBSTRUCTION",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "TRESPASSING ON GOVERNMENT PROPERTY",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "CRIMINAL THREATS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "SIGHTSEEING AT THE SCENE OF AN EMERGENCY",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "Unlawful Assembly",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "LITTERING",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "PERJURY",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "IMPERSONATING A POLICE OFFICER",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "MARKED BILLS",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "VEHICLE BURGLARY",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "GRAVE ROBBERY",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "VANDALISM",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "SHOPLIFTING",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "GRAFFITI",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "PIRACY",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "UNAUTHORIZED USE OF A VEHICLE",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ILLEGAL SQUATING",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "CREDIT CARD FRAUD",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "BREAKING AND ENTERING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "IDENTITY THEFT",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "THEFT OF PUBLIC PROPERTY",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ATTEMPTED ROBBERY",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "RIOTING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ILLEGAL PROTESTS",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "INCITING A RIOT",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "MOVE OVER LAW",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ANIMAL ABUSE AND CRUELTY",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "POSSESSION OF ILLEGALLY TAKEN WILDLIFE",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "IMPORTATION OF RESTRICTED ANIMALS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "EXCEEDING DAILY CATCH LIMITS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "HUNTING OUT OF SEASON OR IN PROTECTED AREAS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "SALE OF ILLEGALLY TAKEN FISH",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ENDANGERED SPECIES VIOLATION",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "USING ILLEGAL FISHING GEAR OR METHODS (E.G., NETS OR TRAPS WHERE NOT ALLOWED)",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "HUNTING WITHOUT A LICENSE",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "OVERFISHING",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ILLEGAL DUMPING",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ILLEGAL LOGGING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ENDANGERED SPECIES TRAFFICKING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ILLEGAL MINING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "POACHING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "ONLINE HARASSMENT",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "PHISHING",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "UNAUTHORIZED ACCESS TO COMPUTER SYSTEMS",
+        "classification": "FELONY",
+        "felony": true,
+        "misdemeanor": false,
+        "infraction": false
+    },
 
 ];
 
