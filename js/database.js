@@ -846,7 +846,56 @@ const defaultViolations = [
         "felony": false,
         "misdemeanor": false,
         "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "DRIVING A BOAT UNDER THE INFLUENCE OF ALCOHOL OR DRUGS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "VIOLATING BOATING SAFETY REGULATIONS",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "NO WAKE ZONE",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "OPERATING A VESSEL WITHOUT THE PROPER REGISTRATION",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "SPEED LIMITS AND RECKLESS OPERATION FOR A VESSEL",
+        "classification": "INFRACTION",
+        "felony": false,
+        "misdemeanor": false,
+        "infraction": true
+    },
+    {
+        "code": "P.C. [PLACEHOLDER]",
+        "description": "FILING A FALSE POLICE REPORT",
+        "classification": "MISDEMEANOR",
+        "felony": false,
+        "misdemeanor": true,
+        "infraction": false
     }
+
 ];
 
 let violations = [...defaultViolations];

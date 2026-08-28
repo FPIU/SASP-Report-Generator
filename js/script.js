@@ -35,13 +35,13 @@ function generateCadCitationText() {
     const otherBasisText = getValue("basis_other_text");
 
     const stopBasisLines = [
-        formatStopBasisRow("Speed",              isChecked("basis_speed"),          "Stop Sign",        isChecked("basis_stopsign"),      "Fail to Yield",      isChecked("basis_yield")),
-        formatStopBasisRow("Improper Signal",    isChecked("basis_signal"),         "Lane/Unsafe Chg",  isChecked("basis_lane"),          "Following Close",    isChecked("basis_following")),
-        formatStopBasisRow("Right of Way",       isChecked("basis_rightofway"),     "Cell/Texting",     isChecked("basis_cellphone"),     "Seatbelt",           isChecked("basis_seatbelt")),
-        formatStopBasisRow("Equipment (lights)", isChecked("basis_equipment"),      "Window Tint",      isChecked("basis_tint"),          "Loud Exhaust/Noise", isChecked("basis_exhaust")),
-        formatStopBasisRow("Expired Reg/Plates", isChecked("basis_expiredreg"),     "No Insurance",     isChecked("basis_insurance"),     "Exhibition Speed",   isChecked("basis_exhibition")),
-        formatStopBasisRow("School Zone",        isChecked("basis_schoolzone"),     "Work Zone",        isChecked("basis_workzone"),      "Yield (Emergency)",  isChecked("basis_emergency_yield")),
-        formatStopBasisRow("DUI/Impairment",     isChecked("basis_dui"),            "Documentation",    isChecked("basis_documentation"), "Other:",             isChecked("basis_other") || Boolean(otherBasisText), otherBasisText)
+        formatStopBasisRow("Speed", isChecked("basis_speed"), "Stop Sign", isChecked("basis_stopsign"), "Fail to Yield", isChecked("basis_yield")),
+        formatStopBasisRow("Improper Signal", isChecked("basis_signal"), "Lane/Unsafe Chg", isChecked("basis_lane"), "Following Close", isChecked("basis_following")),
+        formatStopBasisRow("Right of Way", isChecked("basis_rightofway"), "Cell/Texting", isChecked("basis_cellphone"), "Seatbelt", isChecked("basis_seatbelt")),
+        formatStopBasisRow("Equipment (lights)", isChecked("basis_equipment"), "Window Tint", isChecked("basis_tint"), "Loud Exhaust/Noise", isChecked("basis_exhaust")),
+        formatStopBasisRow("Expired Reg/Plates", isChecked("basis_expiredreg"), "No Insurance", isChecked("basis_insurance"), "Exhibition Speed", isChecked("basis_exhibition")),
+        formatStopBasisRow("School Zone", isChecked("basis_schoolzone"), "Work Zone", isChecked("basis_workzone"), "Yield (Emergency)", isChecked("basis_emergency_yield")),
+        formatStopBasisRow("DUI/Impairment", isChecked("basis_dui"), "Documentation", isChecked("basis_documentation"), "Other:", isChecked("basis_other") || Boolean(otherBasisText), otherBasisText)
     ];
 
     const speedPosted = getValue("speed_posted");
@@ -431,7 +431,7 @@ function setCurrentDateTime() {
         zoneAbbreviation = new Intl.DateTimeFormat("en", { timeZoneName: "short" })
             .formatToParts(current)
             .find(part => part.type === "timeZoneName")?.value || "";
-    } catch (e) {}
+    } catch (e) { }
 
     const formattedTime = `${hh}:${min} Hrs${zoneAbbreviation ? " " + zoneAbbreviation : ""}`;
     const formattedDate = `${mm}/${dd}/${yyyy}`;
@@ -665,17 +665,17 @@ function loadExampleData() {
             officer_rank: "Deputy Chief",
             officer_name: "D. Littin",
             driver_name: "Berry Doofus",
-            driver_id: "DL-8829104",
-            veh_make: "Dodge Charger",
+            driver_id: "OB52SOPC",
+            veh_make: "Lamborghini Urus",
             veh_color: "Black",
-            veh_plate: "88SASP01",
+            veh_plate: "TRVIP3R",
             veh_state: "SA",
-            speed_posted: "65",
-            speed_alleged: "88",
+            speed_posted: "75",
+            speed_alleged: "90",
             calibration_date: "08/01/2026",
-            v1_title: "SPEEDING (21 MPH +)",
+            v1_title: "SPEEDING (11-15 MPH)",
             v2_title: "FAILURE TO MAINTAIN LANES",
-            notes: "Subject was cooperative during traffic stop. Cited and released without incident."
+            notes: "I, Deputy Chief D. Littin, was on patrol duty running radar on the side of the highway at postal 313 right next to the Youtool when I spotted a BLACK LAMBORGHINI URUS speed past me SOUTHBOUND at what I clocked on my RADAR GUN to be 90 MPH in a 75 MPH zone. I pulled out behind the vehicle where I observed him failing to maintain the number two lane, and initiated a traffic stop right up the road at postal 360. The driver, Berry Doofus, very cooperative and apologetic, noting that he was just trying to get back home from a long day at work. The subject's driving record was decently clean except for a few prior traffic violations, however I decided to issue a citation to the subject for his speed and failure to maintain lanes, and he was released without further incident."
         };
 
         const citationChecks = ["basis_speed", "basis_lane", "basis_tint", "speed_radar", "dir_north", "enf_citation", "tow_no"];
