@@ -630,10 +630,10 @@ function loadExampleData() {
             arr_dashcam_id: "345376bnk2-00",
             arr_transport_unit: "Deputy Chief D. Littin | S-05",
             arr_facility: "Grapeseed State Police Station",
-            arr_supervisor: "Sgt. Miller",
+            arr_supervisor: "S-23 LT. Jack Smith",
             arr_supervisor_time: "14:40",
             arr_completed_at: "15:30",
-            arr_narrative: "On 08/25/2026 at approximately 14:15, SASP units initiated a traffic stop on subject vehicle for excessive speed. Vehicle failed to yield and engaged units in a high-speed vehicle pursuit (fleeing & eluding). PIT maneuver executed on Seaview Rd. Subject resisted commands and was subdued using control holds. Search incident to arrest revealed illegal firearms."
+            arr_narrative: "I, S-05 DCHIEF. Littin was running radar at postal 360 on the median of Senora fwy when I noticed a black motorbike coming towards me at high speeds. I pointed my radar gun at the motorcycle which read 119 MPH, and when it passed me going into the Route 68 on-ramp, my car radar read 141 MPH. I immediately pulled out after the motorcycle and radio’d in for additionals, and the purple motorbike with no license plate and two occupants with zero protective gear pulled over on the bridge at postal 306 Westbound. The driver, Hazel Bazel, immediately began speaking, telling me that her license is suspended, that she is a felon, and that she is house hunting. After my additionals arrived, I ordered the rider off the bike and after running her name placed her under arrest. The passenger of the motorcycle was let go and the motorbike was county towed. The suspect was transported to 107 SASP Grapeseed station and booked with no further incident."
         };
 
         const arrestChecks = [
