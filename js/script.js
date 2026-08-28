@@ -614,7 +614,7 @@ function loadExampleData() {
             arr_officer_rank: "Deputy Chief",
             arr_officer_name: "D. Littin",
             arr_subject_name: "Trevor Philips",
-            arr_subject_id: "DL-992014",
+            arr_subject_id: "OB52SOPC",
             arr_subject_sex: "M",
             arr_subject_race: "Caucasian",
             arr_veh_make: "Canis Bodhi",
